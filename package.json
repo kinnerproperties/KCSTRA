@@ -1,0 +1,9 @@
+{
+  "name": "kcstra",
+  "version": "1.0.0",
+  "description": "Kansas City Short Term Rental Alliance",
+  "scripts": {
+    "dev": "vercel dev --listen 3000"
+  },
+  "private": true
+}

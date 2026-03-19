@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KCSTRA — Kansas City Short Term Rental Alliance</title>
+  <meta name="description" content="The Kansas City Short Term Rental Alliance unites STR owners and operators to advocate, educate, and strengthen the short-term rental community in Kansas City.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Kansas City Short Term Rental Alliance">
+  <meta property="og:description" content="Uniting KC short-term rental owners to advocate, educate, and grow together.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kcstra.com">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #1B3A5C;
+      --navy-dark: #0f2235;
+      --sky: #4BA3D4;
+      --sky-light: #7ec4eb;
+      --sky-pale: #e8f4fb;
+      --white: #f8f9fa;
+      --off-white: #f0f4f8;
+      --text: #2c3e50;
+      --text-light: #5a6c7d;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(15, 34, 53, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      transition: all 0.3s;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    nav.scrolled {
+      box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+      background: rgba(15, 34, 53, 0.97);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 42px;
+      width: auto;
+      border-radius: 8px;
+    }
+
+    .nav-logo span {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: #fff;
+      letter-spacing: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .nav-cta {
+      background: var(--sky);
+      color: #fff !important;
+      padding: 0.5rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600 !important;
+      transition: all 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--sky-light) !important;
+      transform: translateY(-1px);
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    .mobile-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #fff;
+      margin: 5px 0;
+      transition: 0.3s;
+      border-radius: 2px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 5rem;
+      background: linear-gradient(170deg, #0a1a2e 0%, var(--navy) 40%, #1a5a82 80%, #1e6a96 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse at 30% 70%, rgba(75, 163, 212, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 30%, rgba(75, 163, 212, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 100%, rgba(30, 106, 150, 0.2) 0%, transparent 40%);
+    }
+
+    .hero::after {
+      display: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 750px;
+    }
+
+    .hero-logo {
+      width: 160px;
+      height: auto;
+      margin-bottom: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+      border: 3px solid rgba(255,255,255,0.15);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4rem;
+      color: #fff;
+      letter-spacing: 4px;
+      line-height: 1.05;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 .highlight {
+      color: var(--sky-light);
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 2.5rem;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2.25rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: var(--sky);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(75, 163, 212, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: var(--sky-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(75, 163, 212, 0.45);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 6rem 2rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.75rem;
+      color: var(--navy);
+      letter-spacing: 2px;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-header p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    .accent-line {
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--sky), var(--sky-light));
+      margin: 0 auto 1rem;
+      border-radius: 2px;
+    }
+
+    /* ── MISSION ── */
+    .mission {
+      background: var(--off-white);
+    }
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      max-width: 1050px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .mission-text h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.75rem;
+      color: var(--navy);
+      margin-bottom: 1.25rem;
+      letter-spacing: 1px;
+    }
+
+    .mission-text p {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+      font-size: 1.02rem;
+      line-height: 1.75;
+    }
+
+    .mission-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .stat-card {
+      background: #fff;
+      padding: 1.75rem 1.25rem;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+      transition: transform 0.25s, box-shadow 0.25s;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.75rem;
+      color: var(--sky);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      margin-top: 0.35rem;
+      font-weight: 500;
+    }
+
+    /* ── BENEFITS ── */
+    .benefits {
+      background: #fff;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .benefit-card {
+      background: #fff;
+      padding: 2rem 1.75rem;
+      border-radius: 14px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+      transition: transform 0.25s, box-shadow 0.25s;
+      border: 1px solid rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .benefit-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--sky), var(--sky-light));
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+    }
+
+    .benefit-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--sky-pale), #d4edf9);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .benefit-card h3 {
+      font-size: 1.1rem;
+      color: var(--navy);
+      margin-bottom: 0.6rem;
+      font-weight: 700;
+    }
+
+    .benefit-card p {
+      color: var(--text-light);
+      font-size: 0.93rem;
+      line-height: 1.65;
+    }
+
+    /* ── BOARD ── */
+    .board-section {
+      background: var(--off-white);
+    }
+
+    .board-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.25rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .board-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+      transition: transform 0.25s, box-shadow 0.25s;
+      border: 1px solid rgba(0,0,0,0.04);
+      min-width: 220px;
+    }
+
+    .board-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .board-avatar {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--sky), #3d8ab8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+
+    .board-name {
+      font-size: 1rem;
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .board-role {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 0.1rem;
+    }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--sky), #3a8fc2);
+      padding: 4rem 2rem;
+      text-align: center;
+      color: #fff;
+    }
+
+    .cta-banner h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.75rem;
+    }
+
+    .cta-banner p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-white {
+      background: #fff;
+      color: var(--navy);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+    }
+
+    /* ── CONTACT ── */
+    .contact {
+      background: var(--navy);
+      color: #fff;
+      position: relative;
+    }
+
+    .contact::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(75, 163, 212, 0.08) 0%, transparent 50%);
+    }
+
+    .contact .section-header h2 { color: #fff; }
+    .contact .section-header p { color: rgba(255,255,255,0.65); }
+    .contact .accent-line { background: linear-gradient(90deg, var(--sky-light), var(--sky)); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      max-width: 950px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-info h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+    }
+
+    .contact-info p {
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    .contact-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .contact-detail .icon {
+      width: 38px;
+      height: 38px;
+      background: rgba(75, 163, 212, 0.15);
+      border: 1px solid rgba(75, 163, 212, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.875rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.9rem 1.1rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder {
+      color: rgba(255,255,255,0.35);
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: var(--sky);
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 0 0 3px rgba(75, 163, 212, 0.15);
+    }
+
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .form-success {
+      display: none;
+      background: rgba(75, 163, 212, 0.15);
+      border: 1px solid rgba(75, 163, 212, 0.3);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      color: var(--sky-light);
+      text-align: center;
+    }
+
+    .form-success.show { display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy-dark);
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    footer a {
+      color: var(--sky-light);
+      text-decoration: none;
+    }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 70px; left: 0; right: 0;
+        background: var(--navy-dark);
+        flex-direction: column;
+        padding: 1.5rem 2rem;
+        gap: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .nav-links.open { display: flex; }
+      .mobile-toggle { display: block; }
+
+      .hero h1 { font-size: 2.75rem; }
+      .hero-subtitle { font-size: 1.02rem; }
+      .hero-logo { width: 130px; }
+
+      .mission-grid { grid-template-columns: 1fr; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+
+      .board-grid { gap: 0.75rem; }
+      .board-card { min-width: 100%; }
+
+      section { padding: 4rem 1.25rem; }
+
+      .leadership-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">
+      <img src="/KCSTRA Logo.png" alt="KCSTRA">
+      <span>KCSTRA</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#benefits">Benefits</a></li>
+      <li><a href="#board">Board</a></li>
+      <li><a href="#contact" class="nav-cta">Get Involved</a></li>
+    </ul>
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <img src="/KCSTRA Logo.png" alt="KCSTRA Logo" class="hero-logo">
+      <h1>Kansas City <span class="highlight">Short Term Rental</span> Alliance</h1>
+      <p class="hero-subtitle">Residents, hosts, local businesses, and advocates protecting the rights of homeowners to responsibly rent their properties in Kansas City.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Join the Alliance</a>
+        <a href="#mission" class="btn btn-outline">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section class="mission" id="mission">
+    <div class="section-header fade-up">
+      <div class="accent-line"></div>
+      <h2>Our Mission</h2>
+      <p>Building a stronger, more unified short-term rental community in Kansas City.</p>
+    </div>
+    <div class="mission-grid">
+      <div class="mission-text fade-up">
+        <h3>The Voice for Legal Short-Term Rentals</h3>
+        <p>KCSTRA is a group of residents, hosts, local businesses, and advocates who understand and protect the rights of homeowners to responsibly rent their properties. We believe in fair and reasonable regulations of short-term rentals in Kansas City, and know the value that private hosting brings to our area's economy.</p>
+        <p>We work to develop reasonable regulations and responsible management, serving as a resource and platform for our members with updates on policy proposals, relevant news, and opportunities for action.</p>
+        <p>Our mission is to balance a thriving short-term rental community which supports both property owners' options and neighborhoods &mdash; collaborating with and educating our community, public officials, STR owners/operators, and associated businesses.</p>
+      </div>
+      <div class="mission-stats fade-up">
+        <div class="stat-card">
+          <div class="stat-number">KC</div>
+          <div class="stat-label">Metro Area Focus</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Owner Driven</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Community Support</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1</div>
+          <div class="stat-label">Unified Voice</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <section class="benefits" id="benefits">
+    <div class="section-header fade-up">
+      <div class="accent-line"></div>
+      <h2>Member Benefits</h2>
+      <p>Everything you need to operate, grow, and protect your STR business.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card fade-up">
+        <div class="benefit-icon">&#x1f3db;</div>
+        <h3>Legislative Advocacy</h3>
+        <p>We monitor and engage with local legislation affecting STRs. Members stay informed on regulatory changes and have a seat at the table.</p>
+      </div>
+      <div class="benefit-card fade-up">
+        <div class="benefit-icon">&#x1f91d;</div>
+        <h3>Networking Events</h3>
+        <p>Connect with fellow STR owners, property managers, and industry vendors at regular meetups and quarterly events across the KC metro.</p>
+      </div>
+      <div class="benefit-card fade-up">
+        <div class="benefit-icon">&#x1f4da;</div>
+        <h3>Education &amp; Resources</h3>
+        <p>Access best practices, compliance guides, market data, and expert-led workshops to sharpen your operations and boost revenue.</p>
+      </div>
+      <div class="benefit-card fade-up">
+        <div class="benefit-icon">&#x1f4b0;</div>
+        <h3>Group Discounts</h3>
+        <p>Exclusive member pricing on cleaning services, property management software, insurance, furnishing, and more through our vendor partners.</p>
+      </div>
+      <div class="benefit-card fade-up">
+        <div class="benefit-icon">&#x1f6e1;</div>
+        <h3>Regulatory Support</h3>
+        <p>Get help navigating permits, licenses, tax compliance, and HOA issues. We provide templates, checklists, and one-on-one guidance.</p>
+      </div>
+      <div class="benefit-card fade-up">
+        <div class="benefit-icon">&#x1f4e2;</div>
+        <h3>Community Voice</h3>
+        <p>Strength in numbers. KCSTRA represents the collective interests of responsible STR operators to local government and media.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOARD -->
+  <section class="board-section" id="board">
+    <div class="section-header fade-up">
+      <div class="accent-line"></div>
+      <h2>KCSTRA Board</h2>
+      <p>Experienced STR operators leading the charge for Kansas City's rental community.</p>
+    </div>
+    <div class="board-grid fade-up">
+      <div class="board-card">
+        <div class="board-avatar">SB</div>
+        <div>
+          <div class="board-name">Susan Brown</div>
+          <div class="board-role">Board Member</div>
+        </div>
+      </div>
+      <div class="board-card">
+        <div class="board-avatar">JZ</div>
+        <div>
+          <div class="board-name">Jaymi Zehms</div>
+          <div class="board-role">Board Member</div>
+        </div>
+      </div>
+      <div class="board-card">
+        <div class="board-avatar">AK</div>
+        <div>
+          <div class="board-name">Adam Kinner</div>
+          <div class="board-role">Board Member</div>
+        </div>
+      </div>
+      <div class="board-card">
+        <div class="board-avatar">LW</div>
+        <div>
+          <div class="board-name">Laura Williams</div>
+          <div class="board-role">Board Member</div>
+        </div>
+      </div>
+      <div class="board-card">
+        <div class="board-avatar">GW</div>
+        <div>
+          <div class="board-name">Grant Woodward</div>
+          <div class="board-role">Board Member</div>
+        </div>
+      </div>
+      <div class="board-card">
+        <div class="board-avatar">SB</div>
+        <div>
+          <div class="board-name">Serena L Raymond Bales</div>
+          <div class="board-role">Board Member</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <h2>Ready to Make a Difference?</h2>
+    <p>Join hundreds of KC hosts working together to protect and grow the short-term rental community.</p>
+    <a href="#contact" class="btn btn-white">Join KCSTRA Today</a>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-header fade-up">
+      <div class="accent-line"></div>
+      <h2>Get Involved</h2>
+      <p>Ready to join the alliance? Reach out and we'll be in touch.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info fade-up">
+        <h3>Join KCSTRA Today</h3>
+        <p>Whether you're a seasoned operator or just getting started, KCSTRA welcomes all Kansas City STR owners and operators. Fill out the form and a member of our team will reach out.</p>
+        <div class="contact-detail">
+          <div class="icon">&#x2709;</div>
+          <span>info@kcstra.com</span>
+        </div>
+        <div class="contact-detail">
+          <div class="icon">&#x1f4cd;</div>
+          <span>Kansas City, Missouri</span>
+        </div>
+        <div class="contact-detail">
+          <div class="icon">&#x1f310;</div>
+          <a href="https://www.facebook.com/groups/794307775401596" target="_blank" rel="noopener" style="color:var(--sky-light);text-decoration:none;">Facebook Group</a>
+        </div>
+      </div>
+      <form class="contact-form fade-up" id="contactForm">
+        <div class="form-row">
+          <input type="text" name="name" placeholder="Full Name" required>
+          <input type="email" name="email" placeholder="Email Address" required>
+        </div>
+        <input type="text" name="phone" placeholder="Phone Number (optional)">
+        <input type="text" name="properties" placeholder="How many STR properties do you manage?">
+        <textarea name="message" placeholder="Tell us about yourself and your interest in KCSTRA..."></textarea>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
+        <div class="form-success" id="formSuccess">Thank you! We'll be in touch soon.</div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 Kansas City Short Term Rental Alliance. All rights reserved.</p>
+    <p style="margin-top:0.5rem;"><a href="mailto:info@kcstra.com">info@kcstra.com</a></p>
+  </footer>
+
+  <script>
+    // ── Nav scroll ──
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ── Mobile menu ──
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+    mobileToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.addEventListener('click', () => navLinks.classList.remove('open'));
+
+    // ── Scroll animations ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── Contact form ──
+    const form = document.getElementById('contactForm');
+    const success = document.getElementById('formSuccess');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      const data = Object.fromEntries(new FormData(form));
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          form.reset();
+          success.classList.add('show');
+          setTimeout(() => success.classList.remove('show'), 5000);
+        } else {
+          alert('Something went wrong. Please email us at info@kcstra.com');
+        }
+      } catch (err) {
+        alert('Something went wrong. Please email us at info@kcstra.com');
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Send Message';
+    });
+  </script>
+</body>
+</html>
