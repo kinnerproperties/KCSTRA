@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx --version)",
+      "Bash(bun --version)",
+      "WebFetch(domain:kcstra.com)",
+      "Bash(npx vercel:*)",
+      "Bash(npm --version)",
+      "Bash(ssh-keygen -t ed25519 -C \"kinnerproperties\" -f ~/.ssh/id_ed25519 -N \"\")"
+    ]
+  }
+}
