@@ -881,7 +881,7 @@
           <input type="text" name="name" placeholder="Full Name" required>
           <input type="email" name="email" placeholder="Email Address" required>
         </div>
-        <input type="text" name="phone" placeholder="Phone Number (optional)">
+        <input type="tel" name="phone" placeholder="Phone Number" id="phoneInput" maxlength="14">
         <input type="text" name="properties" placeholder="How many STR properties do you manage?">
         <textarea name="message" placeholder="Tell us about yourself and your interest in KCSTRA..."></textarea>
         <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
@@ -952,6 +952,21 @@
 
       btn.disabled = false;
       btn.textContent = 'Send Message';
+    });
+
+    // ── Phone auto-format (xxx) xxx-xxxx ──
+    const phoneInput = document.getElementById('phoneInput');
+    phoneInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '');
+      if (val.length > 10) val = val.slice(0, 10);
+      if (val.length >= 7) {
+        val = '(' + val.slice(0,3) + ') ' + val.slice(3,6) + '-' + val.slice(6);
+      } else if (val.length >= 4) {
+        val = '(' + val.slice(0,3) + ') ' + val.slice(3);
+      } else if (val.length >= 1) {
+        val = '(' + val;
+      }
+      e.target.value = val;
     });
   </script>
 </body>
