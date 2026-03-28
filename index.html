@@ -463,6 +463,45 @@
       margin-top: 0.1rem;
     }
 
+    /* ── FOUNDING STORY ── */
+    .founding-section {
+      padding: 5rem 2rem;
+      background: var(--bg);
+    }
+    .founding-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .founding-image img {
+      width: 100%;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .founding-text h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: var(--navy);
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+    }
+    .founding-text p {
+      color: var(--text);
+      line-height: 1.8;
+      font-size: 1.05rem;
+    }
+    .founding-text a {
+      color: var(--sky);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .founding-text a:hover {
+      text-decoration: underline;
+    }
+
     /* ── CTA BANNER ── */
     .cta-banner {
       background: linear-gradient(135deg, var(--sky), #3a8fc2);
@@ -671,6 +710,10 @@
 
       section { padding: 4rem 1.25rem; }
 
+      .founding-grid {
+        grid-template-columns: 1fr;
+      }
+
       .leadership-grid {
         grid-template-columns: 1fr 1fr;
       }
@@ -688,6 +731,7 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#mission">Mission</a></li>
       <li><a href="#benefits">Benefits</a></li>
+      <li><a href="#founding">Our Story</a></li>
       <li><a href="#board">Board</a></li>
       <li><a href="#contact" class="nav-cta">Get Involved</a></li>
     </ul>
@@ -785,6 +829,23 @@
     </div>
   </section>
 
+  <!-- FOUNDING STORY -->
+  <section class="founding-section" id="founding">
+    <div class="section-header fade-up">
+      <div class="accent-line"></div>
+      <h2>Our Story</h2>
+    </div>
+    <div class="founding-grid fade-up">
+      <div class="founding-image">
+        <img src="/founding members graphic image.png" alt="KCSTRA Founding Members — Kristen Doppelt, Laura Williams, and Susan Smith">
+      </div>
+      <div class="founding-text">
+        <h3>How We Started</h3>
+        <p>KCSTRA was founded in 2023 by Kristen Doppelt, Susan Brown and Laura Williams in response to Kansas City, MO regulations threatening our businesses. We have grown and continue to defend our property rights at the Municipal level in both Missouri and Kansas and at the state level with our state group — the <a href="https://movha.org" target="_blank" rel="noopener">MO Vacation Home Alliance — MOVHA.org</a>.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- BOARD -->
   <section class="board-section" id="board">
     <div class="section-header fade-up">
@@ -797,34 +858,34 @@
         <div class="board-avatar">SB</div>
         <div>
           <div class="board-name">Susan Brown</div>
-          <div class="board-role">Board Member</div>
-        </div>
-      </div>
-      <div class="board-card">
-        <div class="board-avatar">JZ</div>
-        <div>
-          <div class="board-name">Jaymi Zehms</div>
-          <div class="board-role">Board Member</div>
-        </div>
-      </div>
-      <div class="board-card">
-        <div class="board-avatar">AK</div>
-        <div>
-          <div class="board-name">Adam Kinner</div>
-          <div class="board-role">Board Member</div>
+          <div class="board-role">President</div>
         </div>
       </div>
       <div class="board-card">
         <div class="board-avatar">LW</div>
         <div>
           <div class="board-name">Laura Williams</div>
-          <div class="board-role">Board Member</div>
+          <div class="board-role">Vice President</div>
+        </div>
+      </div>
+      <div class="board-card">
+        <div class="board-avatar">JZ</div>
+        <div>
+          <div class="board-name">Jaymi Zehms</div>
+          <div class="board-role">Treasurer</div>
         </div>
       </div>
       <div class="board-card">
         <div class="board-avatar">GW</div>
         <div>
           <div class="board-name">Grant Woodward</div>
+          <div class="board-role">Secretary</div>
+        </div>
+      </div>
+      <div class="board-card">
+        <div class="board-avatar">AK</div>
+        <div>
+          <div class="board-name">Adam Kinner</div>
           <div class="board-role">Board Member</div>
         </div>
       </div>
@@ -862,10 +923,11 @@
     <div class="contact-grid">
       <div class="contact-info fade-up">
         <h3>Join KCSTRA Today</h3>
-        <p>Whether you're a seasoned operator or just getting started, KCSTRA welcomes all Kansas City STR owners and operators. Fill out the form and a member of our team will reach out.</p>
+        <p>The best way to connect with us is to join our <a href="https://www.facebook.com/groups/794307775401596" target="_blank" rel="noopener" style="color:var(--sky);font-weight:600;">Private Facebook Group</a>. We don't have formal membership at this time. Feel free to fill out the contact form if you want us to reach out or are interested in being considered for a volunteer position.</p>
+        <p style="margin-top:0.75rem;">Our state group, <strong>MO Vacation Home Alliance</strong>, is membership based and we encourage you to join at <a href="https://movha.org" target="_blank" rel="noopener" style="color:var(--sky);font-weight:600;">MOVHA.org</a>.</p>
         <div class="contact-detail">
           <div class="icon">&#x2709;</div>
-          <span>info@kcstra.com</span>
+          <span>KCSTRA.info@gmail.com</span>
         </div>
         <div class="contact-detail">
           <div class="icon">&#x1f4cd;</div>
@@ -893,7 +955,7 @@
   <!-- FOOTER -->
   <footer>
     <p>&copy; 2026 Kansas City Short Term Rental Alliance. All rights reserved.</p>
-    <p style="margin-top:0.5rem;"><a href="mailto:info@kcstra.com">info@kcstra.com</a></p>
+    <p style="margin-top:0.5rem;"><a href="mailto:KCSTRA.info@gmail.com">KCSTRA.info@gmail.com</a></p>
   </footer>
 
   <script>
@@ -944,10 +1006,10 @@
           success.classList.add('show');
           setTimeout(() => success.classList.remove('show'), 5000);
         } else {
-          alert('Something went wrong. Please email us at info@kcstra.com');
+          alert('Something went wrong. Please email us at KCSTRA.info@gmail.com');
         }
       } catch (err) {
-        alert('Something went wrong. Please email us at info@kcstra.com');
+        alert('Something went wrong. Please email us at KCSTRA.info@gmail.com');
       }
 
       btn.disabled = false;
