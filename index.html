@@ -538,6 +538,60 @@
       box-shadow: 0 6px 25px rgba(0,0,0,0.2);
     }
 
+    /* ── SUPPORT ── */
+    .support {
+      background: var(--off-white);
+      position: relative;
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .support-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .support-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    }
+
+    .support-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .support-card .support-price {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--sky);
+      margin-bottom: 0.25rem;
+    }
+
+    .support-card p {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .support-card [id^="paypal-container"] {
+      width: 100%;
+    }
+
     /* ── CONTACT ── */
     .contact {
       background: var(--navy);
@@ -703,6 +757,7 @@
 
       .mission-grid { grid-template-columns: 1fr; }
       .benefits-grid { grid-template-columns: 1fr; }
+      .support-grid { grid-template-columns: 1fr; }
       .contact-grid { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
 
@@ -734,6 +789,7 @@
       <li><a href="#benefits">Benefits</a></li>
       <li><a href="#founding">Our Story</a></li>
       <li><a href="#board">Board</a></li>
+      <li><a href="#support">Support</a></li>
       <li><a href="#contact" class="nav-cta">Get Involved</a></li>
     </ul>
     <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
@@ -914,6 +970,35 @@
     <a href="#contact" class="btn btn-white">Join KCSTRA Today</a>
   </section>
 
+  <!-- SUPPORT -->
+  <section class="support" id="support">
+    <div class="section-header fade-up">
+      <div class="accent-line"></div>
+      <h2>Support KCSTRA</h2>
+      <p>Help strengthen the KC short-term rental community through sponsorship, advertising, or donations.</p>
+    </div>
+    <div class="support-grid">
+      <div class="support-card fade-up">
+        <h3>Sponsorship</h3>
+        <div class="support-price">$200</div>
+        <p>Support KCSTRA's mission to advocate for and educate short-term rental operators across Kansas City.</p>
+        <div id="paypal-container-35TPSQ6M8JV3U"></div>
+      </div>
+      <div class="support-card fade-up">
+        <h3>FB Group Advertising</h3>
+        <div class="support-price">$100 / year</div>
+        <p>Reach our community with 2 posts per month in the KCSTRA Private Facebook Group.</p>
+        <div id="paypal-container-TZLDNTP8UNDGS"></div>
+      </div>
+      <div class="support-card fade-up">
+        <h3>Merch & Donations</h3>
+        <div class="support-price">Any Amount</div>
+        <p>Purchase KCSTRA merchandise or make a donation to support our ongoing efforts.</p>
+        <div id="paypal-container-ZGTD5UPLPFAEG"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section class="contact" id="contact">
     <div class="section-header fade-up">
@@ -1031,6 +1116,14 @@
       }
       e.target.value = val;
     });
+  </script>
+
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=BAAECK_mRkjtB_XGVRauf0nhQv751z4spH6Q0rh3HmtOidl1fDuxOmld-khxAu9JKcO5Rxfn7SjKG8gBVc&components=hosted-buttons&enable-funding=venmo&currency=USD"></script>
+  <script>
+    paypal.HostedButtons({ hostedButtonId: "35TPSQ6M8JV3U" }).render("#paypal-container-35TPSQ6M8JV3U");
+    paypal.HostedButtons({ hostedButtonId: "TZLDNTP8UNDGS" }).render("#paypal-container-TZLDNTP8UNDGS");
+    paypal.HostedButtons({ hostedButtonId: "ZGTD5UPLPFAEG" }).render("#paypal-container-ZGTD5UPLPFAEG");
   </script>
 </body>
 </html>
