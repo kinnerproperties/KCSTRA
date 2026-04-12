@@ -590,6 +590,37 @@
 
     .support-card [id^="paypal-container"] {
       width: 100%;
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .support-card [id^="paypal-container"].open {
+      display: block;
+    }
+
+    .support-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.75rem;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .support-toggle:hover {
+      background: var(--sky);
+      transform: translateY(-2px);
+    }
+
+    .support-toggle.active {
+      background: var(--text-light);
     }
 
     /* ── CONTACT ── */
@@ -982,18 +1013,21 @@
         <h3>Sponsorship</h3>
         <div class="support-price">$200</div>
         <p>Support KCSTRA's mission to advocate for and educate short-term rental operators across Kansas City.</p>
+        <button class="support-toggle" onclick="togglePaypal(this, 'paypal-container-35TPSQ6M8JV3U')">Pay with PayPal</button>
         <div id="paypal-container-35TPSQ6M8JV3U"></div>
       </div>
       <div class="support-card fade-up">
         <h3>FB Group Advertising</h3>
         <div class="support-price">$100 / year</div>
         <p>Reach our community with 2 posts per month in the KCSTRA Private Facebook Group.</p>
+        <button class="support-toggle" onclick="togglePaypal(this, 'paypal-container-TZLDNTP8UNDGS')">Pay with PayPal</button>
         <div id="paypal-container-TZLDNTP8UNDGS"></div>
       </div>
       <div class="support-card fade-up">
         <h3>Merch & Donations</h3>
         <div class="support-price">Any Amount</div>
         <p>Purchase KCSTRA merchandise or make a donation to support our ongoing efforts.</p>
+        <button class="support-toggle" onclick="togglePaypal(this, 'paypal-container-ZGTD5UPLPFAEG')">Pay with PayPal</button>
         <div id="paypal-container-ZGTD5UPLPFAEG"></div>
       </div>
     </div>
@@ -1116,6 +1150,14 @@
       }
       e.target.value = val;
     });
+
+    // ── PayPal toggle ──
+    function togglePaypal(btn, containerId) {
+      const container = document.getElementById(containerId);
+      const isOpen = container.classList.toggle('open');
+      btn.textContent = isOpen ? 'Close' : 'Pay with PayPal';
+      btn.classList.toggle('active', isOpen);
+    }
   </script>
 
   <!-- PayPal SDK -->
