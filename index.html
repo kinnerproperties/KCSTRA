@@ -805,6 +805,23 @@
         grid-template-columns: 1fr 1fr;
       }
     }
+    /* ── BLOG LATEST ── */
+    .blog-latest { padding: 6rem 2.5rem; background: var(--off-white); }
+    .blog-latest-grid {
+      max-width: 1100px; margin: 3rem auto 0;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+    }
+    .blog-latest-card {
+      display: block; text-decoration: none; color: inherit;
+      background: #fff; border: 1px solid #e3e9ef; border-radius: 14px; padding: 1.8rem;
+      transition: box-shadow .25s, transform .25s;
+    }
+    .blog-latest-card:hover { box-shadow: 0 12px 32px rgba(27,58,92,0.14); transform: translateY(-4px); }
+    .blog-latest-card h3 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.25rem; margin-bottom: 0.35rem; }
+    .blog-latest-card .blog-date { color: var(--sky); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.6rem; }
+    .blog-latest-card p { color: var(--text-light); font-size: 0.95rem; }
+    .blog-latest-all { display: block; width: fit-content; margin: 2.5rem auto 0; color: var(--sky); text-decoration: none; font-weight: 700; }
+    .blog-latest-all:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -1026,6 +1043,41 @@
       </div>
     </div>
   </section>
+
+  <!-- BLOG LATEST -->
+  <section class="blog-latest" id="blog-latest" style="display:none;">
+    <div class="section-header">
+      <div class="accent-line"></div>
+      <h2>Latest from the Blog</h2>
+      <p>Regulation updates, meeting recaps, and hosting tips from the KC short-term rental community.</p>
+    </div>
+    <div class="blog-latest-grid" id="blogLatestGrid"></div>
+    <a class="blog-latest-all" href="/blog/">View all posts &rarr;</a>
+  </section>
+  <script>
+    fetch('/blog/posts.json')
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (posts) {
+        if (!posts.length) return;
+        var grid = document.getElementById('blogLatestGrid');
+        posts.forEach(function (p) {
+          var a = document.createElement('a');
+          a.className = 'blog-latest-card';
+          a.href = '/blog/' + p.slug + '/';
+          var h3 = document.createElement('h3');
+          h3.textContent = p.title;
+          var date = document.createElement('div');
+          date.className = 'blog-date';
+          date.textContent = p.date;
+          var desc = document.createElement('p');
+          desc.textContent = p.description;
+          a.appendChild(h3); a.appendChild(date); a.appendChild(desc);
+          grid.appendChild(a);
+        });
+        document.getElementById('blog-latest').style.display = '';
+      })
+      .catch(function () {});
+  </script>
 
   <!-- CONTACT -->
   <section class="contact" id="contact">

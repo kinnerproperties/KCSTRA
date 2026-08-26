@@ -148,4 +148,10 @@ const indexBody = `    <p class="blog-eyebrow">KCSTRA Blog</p>
 ${cards || '    <p>No posts yet — check back soon!</p>'}`;
 fs.writeFileSync(path.join(OUT_DIR, 'index.html'), page({ title: 'Blog', description: 'News and updates from the Kansas City Short Term Rental Alliance.', body: indexBody, url: '/blog/' }));
 
+// Feed for the homepage "Latest from the Blog" section
+fs.writeFileSync(
+  path.join(OUT_DIR, 'posts.json'),
+  JSON.stringify(posts.slice(0, 3).map(({ slug, title, date, author, description }) => ({ slug, title, date: formatDate(date), author, description })))
+);
+
 console.log(`Built ${posts.length} post(s) into blog/`);
