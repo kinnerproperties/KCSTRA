@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "Kansas City Short Term Rental Alliance",
   "scripts": {
-    "dev": "vercel dev --listen 3000"
+    "dev": "vercel dev --listen 3000",
+    "build": "node scripts/build-blog.js"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.11"
+  }
 }

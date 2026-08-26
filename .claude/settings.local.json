@@ -7,7 +7,19 @@
       "WebFetch(domain:kcstra.com)",
       "Bash(npx vercel:*)",
       "Bash(npm --version)",
-      "Bash(ssh-keygen -t ed25519 -C \"kinnerproperties\" -f ~/.ssh/id_ed25519 -N \"\")"
+      "Bash(ssh-keygen -t ed25519 -C \"kinnerproperties\" -f ~/.ssh/id_ed25519 -N \"\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(ls \"/Users/kinnerair/Library/Mobile Documents/com~apple~CloudDocs/kcstra/\"founding*)",
+      "WebSearch",
+      "WebFetch(domain:www.ebay.com)",
+      "WebFetch(domain:www.discogs.com)",
+      "WebFetch(domain:www.popsike.com)",
+      "Bash(ls -d */)",
+      "Read(//Users/kinnerair/Library/**)",
+      "Bash(gh repo:*)",
+      "Bash(brew install:*)",
+      "Bash(gh auth:*)",
+      "WebFetch(domain:kccuprentals.com)"
     ]
   }
 }

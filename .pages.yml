@@ -1,0 +1,35 @@
+media:
+  input: content/uploads
+  output: /content/uploads
+
+content:
+  - name: posts
+    label: Blog Posts
+    type: collection
+    path: content/posts
+    filename: "{fields.title}.md"
+    view:
+      fields: [title, date, author]
+      sort: [date]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: date
+        label: Date
+        type: date
+        required: true
+      - name: author
+        label: Author
+        type: string
+        default: KCSTRA Board
+      - name: description
+        label: Short Description (shown on the blog list page)
+        type: text
+      - name: body
+        label: Post Content
+        type: rich-text
