@@ -39,7 +39,7 @@ Push to `main` — Vercel picks it up automatically.
 ## STR Permit Audit (members-only, `/audit`) — Sep 2026
 A copy of the kinnerproperties.com admin STR Audit dashboard for board members. No public link; share the URL directly.
 - `audit/index.html` — the dashboard (KCSTRA palette, sign-in gate). Views: Overview, Map, Listings, Operators, Owners, World Cup, Corrections, Method.
-- `api/audit-login.js` — POST {user, pw} sets the HttpOnly `kcstra_audit` cookie (30 days); GET = who am I; DELETE = sign out. Rate-limited 10/10 min per IP.
+- `api/audit-login.js` — POST {user, pw} sets the HttpOnly `kcstra_audit` cookie (30 days for `AUDIT_ADMINS`, `AUDIT_SESSION_HOURS` = 24 h for everyone else); GET = who am I; DELETE = sign out. Rate-limited 10/10 min per IP.
 - `api/audit.js` — snapshot index / `?snapshot=DATE` / `?corrections=1`; POST correction / correction-status / correction-delete. Cookie-gated. Corrections carry `by` / `resolvedBy`.
 - `api/_audit.js` — accounts, scrypt hashing, session signing, Redis (Upstash REST) helpers.
 - `data/audit/index.json` + `data/audit/snapshots/<date>.json` — written by the audit pipeline's `export_snapshot.py` (kc-str-permit-audit skill), which mirrors here automatically. Commit + push to publish. `/data/audit/*` redirects to `/audit` so the raw files aren't browsable.

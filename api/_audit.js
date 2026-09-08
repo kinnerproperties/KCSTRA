@@ -5,12 +5,14 @@
  * Hashes are produced by `node scripts/audit-user.js <name> [password]`.
  * Sessions: HttpOnly cookie `kcstra_audit` = name.expires.hmac, signed with
  * AUDIT_SESSION_SECRET. Rotate the secret to log everyone out at once.
+ * Admins (AUDIT_ADMINS) stay signed in 30 days; everyone else AUDIT_SESSION_HOURS (default 24).
  * Corrections: Upstash Redis via KV_REST_API_URL / KV_REST_API_TOKEN.
  */
 import { createHmac, scryptSync, timingSafeEqual, randomBytes } from 'crypto';
 
 export const COOKIE = 'kcstra_audit';
-const TTL_MS = 30 * 86400000;
+const ADMIN_TTL_MS = 30 * 86400000;
+const MEMBER_TTL_MS = (+process.env.AUDIT_SESSION_HOURS || 24) * 3600000;   // everyone else signs in again daily
 
 export function users() {
   try { const u = JSON.parse(process.env.AUDIT_USERS || '{}'); return u && typeof u === 'object' ? u : {}; } catch { return {}; }
@@ -37,7 +39,7 @@ const sign = (name, exp) => createHmac('sha256', secret()).update(`${name}|${exp
 
 export function mintSession(name) {
   if (!secret()) throw new Error('AUDIT_SESSION_SECRET not configured');
-  const exp = Date.now() + TTL_MS;
+  const exp = Date.now() + (isAdmin(name) ? ADMIN_TTL_MS : MEMBER_TTL_MS);
   return { token: `${name}.${exp}.${sign(name, exp)}`, expiresAt: new Date(exp).toISOString() };
 }
 
