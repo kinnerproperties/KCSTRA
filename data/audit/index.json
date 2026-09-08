@@ -1,5 +1,36 @@
 [
  {
+  "date": "2026-09-08",
+  "file": "2026-09-08.json",
+  "listings": 1171,
+  "hosts": 646,
+  "problems": 456,
+  "strong": 178,
+  "permitted": 549,
+  "worldCup": 83,
+  "hotel": 164,
+  "registry": 1023,
+  "byCat": {
+   "Permit issued (registry lag)": 5,
+   "Currently permitted, listing shows old number": 266,
+   "No registration section": 29,
+   "Active permit (prefix differs)": 33,
+   "Hotel room, claims exempt": 164,
+   "Cites an expired permit": 104,
+   "Active permit": 245,
+   "Cites a non-existent permit": 93,
+   "World Cup permit, expired": 66,
+   "One registration, multiple units": 67,
+   "Cites a denied permit": 25,
+   "Claims exempt": 40,
+   "Invalid value": 16,
+   "City status: Cancelled": 1,
+   "Exceeds building density limit": 5,
+   "Cites a permit for a different property": 11,
+   "City status: Hold": 1
+  }
+ },
+ {
   "date": "2026-09-07",
   "file": "2026-09-07.json",
   "listings": 1141,
