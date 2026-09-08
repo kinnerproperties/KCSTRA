@@ -16,6 +16,11 @@ export function users() {
   try { const u = JSON.parse(process.env.AUDIT_USERS || '{}'); return u && typeof u === 'object' ? u : {}; } catch { return {}; }
 }
 
+/** AUDIT_ADMINS: comma-separated names who can see the Activity view (default: adam). */
+export function isAdmin(name) {
+  return String(process.env.AUDIT_ADMINS || 'adam').split(',').map(x => x.trim().toLowerCase()).includes(String(name).toLowerCase());
+}
+
 export function hashPassword(pw, salt = randomBytes(16).toString('hex')) {
   return `scrypt$${salt}$${scryptSync(String(pw), salt, 32).toString('hex')}`;
 }
@@ -81,4 +86,30 @@ export async function rateLimit(key, limit, windowSec) {
     const d = await r.json();
     return (d?.[0]?.result ?? 0) <= limit;
   } catch { return true; }
+}
+
+/* ---------- activity log ---------- */
+export const LOG_KEY = 'audit:logins', SESS_KEY = 'audit:sessions';
+const GAP_MS = 10 * 60000;   // a quiet spell longer than this starts a new session
+export function clientInfo(req) {
+  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || '';
+  const ua = String(req.headers['user-agent'] || '');
+  const dev = /iPhone|Android.*Mobile/i.test(ua) ? 'phone' : /iPad|Tablet/i.test(ua) ? 'tablet' : 'desktop';
+  const br = /Edg\//.test(ua) ? 'Edge' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'other';
+  return { ip, dev, br };
+}
+export async function logLogin(user, req, ok) {
+  try { const l = (await kvGet(LOG_KEY)) || []; l.unshift({ ts: new Date().toISOString(), user, ok, ...clientInfo(req) }); await kvSet(LOG_KEY, l.slice(0, 2000)); } catch {}
+}
+/** Heartbeat: extend the user's current session or open a new one. view = which tab they are on. */
+export async function touchSession(user, req, view, ended) {
+  try {
+    const now = Date.now(), list = (await kvGet(SESS_KEY)) || [];
+    let s = list.find(x => x.user === user && !x.ended && now - Date.parse(x.last) < GAP_MS);
+    if (!s) { s = { user, start: new Date(now).toISOString(), last: null, views: {}, ...clientInfo(req) }; list.unshift(s); }
+    s.last = new Date(now).toISOString();
+    if (view) s.views[view] = (s.views[view] || 0) + 1;
+    if (ended) s.ended = true;
+    await kvSet(SESS_KEY, list.slice(0, 1000));
+  } catch {}
 }

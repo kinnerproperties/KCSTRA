@@ -149,6 +149,7 @@ svg.spark { width: 100%; height: 120px; }
       <button data-view="worldcup">World Cup</button>
       <button data-view="corrections">Corrections <span id="corr-badge" class="pill amber hidden"></span></button>
       <button data-view="method">Method</button>
+      <button data-view="activity" id="act-btn" class="hidden">Activity</button>
       <span class="who" id="who"></span>
       <button class="btn small" onclick="logout()">Sign out</button>
     </nav>
@@ -226,6 +227,15 @@ svg.spark { width: 100%; height: 120px; }
       <div class="tablewrap"><table><thead><tr><th>Logged</th><th>Listing</th><th>Was</th><th>Kind</th><th>Note</th><th>Status</th><th></th></tr></thead><tbody id="corr-body"></tbody></table></div>
     </section>
 
+    <section class="view" data-view="activity">
+      <p class="muted">Who has signed in and how long they stayed. A session ends after ten quiet minutes or on sign-out. Views counts how many times each tab was opened.</p>
+      <div class="grid2">
+        <div class="card"><h2>By person</h2><div id="act-people"></div></div>
+        <div class="card"><h2>Sign-in attempts</h2><div class="tablewrap" style="max-height:420px"><table><thead><tr><th>When</th><th>Name</th><th>Result</th><th>Device</th><th>IP</th></tr></thead><tbody id="act-logins"></tbody></table></div></div>
+      </div>
+      <div class="card"><h2>Sessions</h2><div class="tablewrap" style="max-height:60vh"><table><thead><tr><th>Person</th><th>Started</th><th>Last seen</th><th>Length</th><th>Device</th><th>Views</th></tr></thead><tbody id="act-sessions"></tbody></table></div></div>
+    </section>
+
     <section class="view" data-view="method">
       <div class="card">
         <h2>How the data is produced</h2>
@@ -274,6 +284,24 @@ async function api(qs, opts) {
   return r.json();
 }
 
+/* ---------- activity heartbeat ---------- */
+let IS_ADMIN = false, hbTimer = null, curView = 'overview';
+function ping(view) { if (!ME || document.hidden) return; fetch('/api/audit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'ping', view: view || null }), keepalive: true }).catch(() => {}); }
+function startHeartbeat() { clearInterval(hbTimer); hbTimer = setInterval(() => ping(), 60000); }
+document.addEventListener('visibilitychange', () => { if (!document.hidden) ping(); });
+const fmtLen = ms => { const m = Math.round(ms / 60000); return m < 1 ? '<1 min' : m < 60 ? m + ' min' : Math.floor(m / 60) + ' h ' + (m % 60) + ' min'; };
+const fmtTs = t => t ? new Date(t).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '-';
+async function renderActivity() {
+  const d = await api('?activity=1'); const now = Date.now();
+  const live = s => !s.ended && now - Date.parse(s.last) < 10 * 60000;
+  const len = s => Math.max(0, Date.parse(s.last) - Date.parse(s.start));
+  const per = {}; for (const s of d.sessions) { const p = per[s.user] = per[s.user] || { n: 0, ms: 0, last: 0 }; p.n++; p.ms += len(s); p.last = Math.max(p.last, Date.parse(s.last)); }
+  const fails = {}; for (const l of d.logins) if (!l.ok) fails[l.user] = (fails[l.user] || 0) + 1;
+  $('act-people').innerHTML = Object.keys(per).length ? `<table><thead><tr><th>Person</th><th>Sessions</th><th>Total time</th><th>Last seen</th><th>Failed sign-ins</th></tr></thead><tbody>${Object.entries(per).sort((a, b) => b[1].last - a[1].last).map(([u, p]) => `<tr><td><b>${esc(u)}</b></td><td>${p.n}</td><td>${fmtLen(p.ms)}</td><td>${fmtTs(p.last)}</td><td>${fails[u] || ''}</td></tr>`).join('')}</tbody></table>` : '<p class="muted">Nothing yet.</p>';
+  $('act-logins').innerHTML = d.logins.slice(0, 200).map(l => `<tr><td>${fmtTs(l.ts)}</td><td>${esc(l.user)}</td><td>${l.ok ? '<span class="pill green">ok</span>' : '<span class="pill red">wrong password</span>'}</td><td>${esc(l.dev)} · ${esc(l.br)}</td><td class="muted">${esc(l.ip)}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">Nothing yet.</td></tr>';
+  $('act-sessions').innerHTML = d.sessions.map(s => `<tr><td><b>${esc(s.user)}</b>${live(s) ? ' <span class="pill green">online</span>' : ''}</td><td>${fmtTs(s.start)}</td><td>${fmtTs(s.last)}</td><td>${fmtLen(len(s))}</td><td>${esc(s.dev)} · ${esc(s.br)}</td><td class="muted">${Object.entries(s.views || {}).filter(([k]) => k !== 'login').sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(' · ')}</td></tr>`).join('') || '<tr><td colspan="6" class="muted">Nothing yet.</td></tr>';
+}
+
 /* ---------- state ---------- */
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -296,7 +324,7 @@ const SEV = Object.fromEntries(ORDER.map((c, i) => [c, i]));
 
 async function boot() {
   $('gate').classList.add('hidden'); $('app').classList.remove('hidden');
-  const d = await api(''); INDEX = d.snapshots || []; if (d.user) ME = d.user; $('who').textContent = ME ? 'Signed in as ' + ME : '';
+  const d = await api(''); INDEX = d.snapshots || []; if (d.user) ME = d.user; $('who').textContent = ME ? 'Signed in as ' + ME : ''; IS_ADMIN = !!d.admin; $('act-btn').classList.toggle('hidden', !IS_ADMIN); startHeartbeat();
   $('snap').innerHTML = INDEX.map(s => `<option value="${s.date}">${s.date} · ${s.listings} listings</option>`).join('');
   if (INDEX.length) await loadSnapshot(INDEX[0].date);
   loadCorrections();
@@ -575,6 +603,8 @@ function showView(v) {
   document.querySelectorAll('nav.views button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
   document.querySelectorAll('.view').forEach(s => s.classList.toggle('active', s.dataset.view === v));
   if (v === 'map') { initMap(); setTimeout(() => map && map.resize(), 50); }
+  if (v === 'activity') renderActivity();
+  if (v !== curView || !hbTimer) ping(v); curView = v;
   try { localStorage.setItem('str-audit-view', v); } catch {}
 }
 document.querySelectorAll('nav.views button').forEach(b => b.onclick = () => showView(b.dataset.view));

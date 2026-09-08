@@ -10,13 +10,15 @@
  *   POST /api/audit {action:'correction', id, kind, note, title, cat}
  *   POST /api/audit {action:'correction-status', ts, status}   open|verified|rejected
  *   POST /api/audit {action:'correction-delete', ts}
+ *   POST /api/audit {action:'ping', view}   → heartbeat (page sends one a minute while visible, and on tab change)
+ *   GET  /api/audit?activity=1        → { logins, sessions } (admins only, AUDIT_ADMINS)
  *
  * Corrections live in Redis under audit:corrections (array, newest first) and
  * carry the member who logged/resolved them. They never change a snapshot.
  */
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { sessionUser, kvGet, kvSet } from './_audit.js';
+import { sessionUser, kvGet, kvSet, isAdmin, touchSession, LOG_KEY, SESS_KEY } from './_audit.js';
 
 const DIR = join(process.cwd(), 'data', 'audit');
 const KEY = 'audit:corrections';
@@ -32,7 +34,8 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
 
   if (req.method === 'GET') {
-    const { snapshot, corrections } = req.query || {};
+    const { snapshot, corrections, activity } = req.query || {};
+    if (activity) { if (!isAdmin(user)) return res.status(403).json({ error: 'Admins only' }); return res.json({ logins: (await kvGet(LOG_KEY)) || [], sessions: (await kvGet(SESS_KEY)) || [] }); }
     if (corrections) return res.json({ corrections: (await kvGet(KEY)) || [] });
     if (snapshot) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(String(snapshot))) return res.status(400).json({ error: 'bad snapshot id' });
@@ -42,11 +45,12 @@ export default async function handler(req, res) {
       return res.send(readFileSync(f, 'utf8'));
     }
     const idx = join(DIR, 'index.json');
-    return res.json({ snapshots: existsSync(idx) ? JSON.parse(readFileSync(idx, 'utf8')) : [], user });
+    return res.json({ snapshots: existsSync(idx) ? JSON.parse(readFileSync(idx, 'utf8')) : [], user, admin: isAdmin(user) });
   }
 
   if (req.method === 'POST') {
     const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+    if (b.action === 'ping') { await touchSession(user, req, String(b.view || '').slice(0, 20)); return res.json({ ok: true }); }
     const list = (await kvGet(KEY)) || [];
     if (b.action === 'correction') {
       const id = String(b.id || '').replace(/\D/g, '');

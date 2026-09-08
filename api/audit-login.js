@@ -3,15 +3,15 @@
  * GET  /api/audit-login               → { user } for the current session, or 401
  * DELETE /api/audit-login             → clears the cookie
  */
-import { users, checkPassword, mintSession, sessionUser, cookieHeader, rateLimit } from './_audit.js';
+import { users, checkPassword, mintSession, sessionUser, cookieHeader, rateLimit, isAdmin, logLogin, touchSession } from './_audit.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method === 'GET') {
     const u = sessionUser(req);
-    return u ? res.json({ ok: true, user: u }) : res.status(401).json({ error: 'Not signed in' });
+    return u ? res.json({ ok: true, user: u, admin: isAdmin(u) }) : res.status(401).json({ error: 'Not signed in' });
   }
-  if (req.method === 'DELETE') { res.setHeader('Set-Cookie', cookieHeader('')); return res.json({ ok: true }); }
+  if (req.method === 'DELETE') { const u = sessionUser(req); if (u) await touchSession(u, req, null, true); res.setHeader('Set-Cookie', cookieHeader('')); return res.json({ ok: true }); }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
@@ -20,11 +20,12 @@ export default async function handler(req, res) {
   const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
   const name = String(b.user || '').trim().toLowerCase(), pw = String(b.pw || '');
   const stored = users()[name];
-  if (!name || !pw || !stored || !checkPassword(pw, stored)) return res.status(401).json({ error: 'Wrong name or password' });
+  if (!name || !pw || !stored || !checkPassword(pw, stored)) { if (name) await logLogin(name, req, false); return res.status(401).json({ error: 'Wrong name or password' }); }
 
   try {
     const { token, expiresAt } = mintSession(name);
     res.setHeader('Set-Cookie', cookieHeader(token, expiresAt));
-    return res.json({ ok: true, user: name, expiresAt });
+    await logLogin(name, req, true); await touchSession(name, req, 'login');
+    return res.json({ ok: true, user: name, admin: isAdmin(name), expiresAt });
   } catch (e) { return res.status(500).json({ error: e.message }); }
 }
