@@ -163,10 +163,11 @@ svg.spark { width: 100%; height: 120px; }
         <div class="chart"><h3>Problems by ZIP</h3><div class="hint">Problem listings per ZIP code, with the permitted share. Click a bar</div><canvas id="c-zip"></canvas></div>
         <div class="chart"><h3>Operators with the most problems</h3><div class="hint">Click a bar to open that host</div><canvas id="c-ops"></canvas></div>
         <div class="chart"><h3>Expired permits, by year they lapsed</h3><div class="hint">Listings still citing a permit that expired that year. Click a bar</div><canvas id="c-exp"></canvas></div>
-        <div class="chart"><h3>Distance to the nearest active permit</h3><div class="hint">Problem listings only. Over 200 m means nothing permitted nearby. Click a bar</div><canvas id="c-dist"></canvas></div>
+        <div class="chart"><h3>How far is the nearest permitted STR?</h3><div class="hint">Problem listings only: distance from the listing to the closest currently permitted short-term rental of any kind. It shows whether the city is issuing permits at that spot, not the building type. Under 60 m is usually the same building or block. Over 200 m means nothing permitted anywhere near. Click a bar</div><canvas id="c-dist"></canvas></div>
+        <div class="chart"><h3>Problem listings in shared buildings</h3><div class="hint">How many listings share the same city address (the same building). The address is unknown when the number on the listing does not exist in CompassKC. Click a bar</div><canvas id="c-bldg"></canvas></div>
         <div class="chart"><h3>Advertised guest cap</h3><div class="hint">The ordinance caps a unit at 8 guests. Click a bar</div><canvas id="c-guest"></canvas></div>
-        <div class="chart"><h3>City permit type on the cited number</h3><div class="hint">Per CompassKC. Click a slice</div><canvas id="c-type"></canvas></div>
-        <div class="chart"><h3>Active registrations issued, by month</h3><div class="hint">The city's live registry, 1,023 permits. Renewals cluster in spring</div><canvas id="c-reg"></canvas></div>
+        <div class="chart"><h3>City permit type on the cited number</h3><div class="hint">Per CompassKC, for every listing whose number resolves, permitted and problem listings alike. Click a slice</div><canvas id="c-type"></canvas></div>
+        <div class="chart"><h3>Active registrations issued, by month</h3><div class="hint">The city's live registry of currently issued permits. Renewals cluster in spring</div><canvas id="c-reg"></canvas></div>
         <div class="chart"><h3>Airbnb listing type</h3><div class="hint">Problem share by property type. Click a bar</div><canvas id="c-ptype"></canvas></div>
         <div class="chart" id="trend-card"><h3>Trend across snapshots</h3><div class="hint" id="trend">One snapshot so far. The trend appears after the next pipeline run.</div><canvas id="c-trend" hidden></canvas></div>
       </div>
@@ -178,9 +179,9 @@ svg.spark { width: 100%; height: 120px; }
       <div class="filters">
         <label><input type="checkbox" id="m-reg" checked onchange="mapLayers()"> Show active permits (city registry)</label>
         <label><input type="checkbox" id="m-prob" checked onchange="mapLayers()"> Problems</label>
-        <label><input type="checkbox" id="m-ok" onchange="mapLayers()"> Permitted</label>
+        <label><input type="checkbox" id="m-ok" onchange="mapLayers()"> Properly permitted</label>
         <label><input type="checkbox" id="m-hotel" onchange="mapLayers()"> Hotels</label>
-        <label><input type="checkbox" id="m-strong" onchange="mapLayers()"> Strong cases only</label>
+        <label><input type="checkbox" id="m-strong" onchange="mapLayers()"> Confirmed unpermitted only</label>
       </div>
       <div id="map"></div>
     </section>
@@ -191,7 +192,7 @@ svg.spark { width: 100%; height: 120px; }
         <select id="f-cat" onchange="renderTable()"><option value="">All findings</option></select>
         <select id="f-pt" onchange="renderTable()"><option value="">All permit types</option></select>
         <label><input type="checkbox" id="f-prob" onchange="renderTable()"> Problems only</label>
-        <label><input type="checkbox" id="f-strong" onchange="renderTable()"> Strong cases</label>
+        <label><input type="checkbox" id="f-strong" onchange="renderTable()"> Confirmed unpermitted</label>
         <label><input type="checkbox" id="f-wc" onchange="renderTable()"> World Cup</label>
         <label><input type="checkbox" id="f-uf" onchange="renderTable()"> Unit / density flag</label>
         <select id="f-zip" onchange="renderTable()"><option value="">All ZIPs</option></select>
@@ -218,7 +219,7 @@ svg.spark { width: 100%; height: 120px; }
     </section>
 
     <section class="view" data-view="worldcup">
-      <p class="muted">Listings still citing a temporary Major Event registration. All expired 31 July 2026.</p>
+      <p class="muted" id="wc-intro"></p>
       <div class="tablewrap"><table><thead><tr><th>Listing</th><th>Host</th><th>Number</th><th>City status</th><th>Finding</th><th>Owner of record</th></tr></thead><tbody id="wc-body"></tbody></table></div>
     </section>
 
@@ -246,14 +247,17 @@ svg.spark { width: 100%; height: 120px; }
           <li><b>CompassKC.</b> Every cited number is looked up for status (Issued, Expired, Denied, not found), type (Resident, Non-Resident, Major Event) and the parcel it belongs to.</li>
           <li><b>Parcel rule.</b> A parcel holding a currently issued permit under a newer number counts as permitted even when the listing shows an old number. Validated on a known-permitted portfolio.</li>
           <li><b>Borrowed-permit check.</b> A permitted verdict whose permit parcel is more than 1 km from the listing pin becomes "Cites a permit for a different property". Pins are fuzzed by at most about 150 m.</li>
-          <li><b>Distance.</b> Nearest currently issued permit to each pin. Over 200 m means no permitted STR is anywhere near.</li>
+          <li><b>Distance.</b> Nearest currently issued permit to each pin, whatever property it belongs to. It says whether permits are being issued at that spot; it does not identify the building type. Over 200 m means no permitted STR is anywhere near.</li>
+          <li><b>Confirmed unpermitted.</b> The subset of problem listings where every innocent explanation has been ruled out: the cited number is expired, denied, non-existent, invalid or absent, the parcel holds no issued permit under any number, and no permitted STR sits within 200 m, so a fuzzed pin or a neighbour's renewal cannot account for it. A permit that belongs to a different property also qualifies. The other problem listings are still problems; they just have a permitted STR close enough that a data quirk is conceivable.</li>
+          <li><b>World Cup numbers.</b> NSD-STRMAJ numbers were temporary Major Event registrations; all of them expired 31 July 2026. A listing citing one is a problem only when its parcel has nothing else active. Parcels that have since obtained a regular permit are counted as properly permitted with an old number shown.</li>
+          <li><b>Pre-2023 numbers.</b> CD-STR and plain STR numbers come from the registration program that ran before the June 2023 ordinance moved short-term rentals to Neighborhood Services (NSD-STR). They were ordinary annual registrations, not special-use permits, and every one has expired. Most sit on parcels that now hold a current NSD-STR number and count as properly permitted; the rest are expired permits like any other.</li>
           <li><b>Owner of record.</b> Parcel owner and mailing address from the Parcel Viewer layer, by city parcel ID.</li>
           <li><b>Units and density.</b> Sec. 56-803 registers each dwelling unit separately, allows no more than one STR per eight units in a building of three or more (registration stops at 12.5%), and keeps non-resident STRs in one- and two-unit structures 1,000 feet apart. A number shown on two or more entire-home listings that are different units, or a building over the cap per the assessor's unit count and the live registry, is flagged.</li>
           <li><b>Hotels.</b> Hotel brands and hotel-room resellers claiming Exempt are separated out and not counted.</li>
         </ol>
         <p class="muted">Each audit run produces a dated snapshot. This page is a viewer over those snapshots; pick one at the top to compare runs.</p>
       </div>
-      <div class="card"><h2>Rules</h2><ul><li>Never present "old number on a permitted parcel" as a violation.</li><li>Mid-term (30+ night) listings need no permit.</li><li>Hotels, motels and bed-and-breakfasts sit outside the program and are separated out. A dwelling that says "Exempt" is making a claim the ordinance does not provide for, so it counts as a contradicted number.</li><li>Every row links to its public source; nothing here is private data.</li></ul></div>
+      <div class="card"><h2>Rules</h2><ul><li>"Properly permitted" means the parcel holds a currently issued registration, whether or not the listing shows the newest number.</li><li>Never present "old number on a permitted parcel" as a violation.</li><li>Mid-term (30+ night) listings need no permit.</li><li>Hotels, motels and bed-and-breakfasts sit outside the program and are separated out. A dwelling that says "Exempt" is making a claim the ordinance does not provide for, so it counts as a contradicted number.</li><li>Every row links to its public source; nothing here is private data.</li></ul></div>
     </section>
   </main>
 </div>
@@ -317,8 +321,16 @@ const pill = c => `<span class="pill ${tone(c)}">${esc(LABEL[c] || c)}</span>`;
 let S = null, PROB = [], INDEX = [], byId = {}, filtered = [], page = 0, sortK = 'cat', sortD = 1, map = null, mapReady = false, corrections = [], charts = {}, spotTimer = null;
 const extra = {};  // chart-driven filters: g8, nmMin, nmMax, expYear, ptype, host
 function setExtra(o) { Object.assign(extra, o); for (const k in extra) if (extra[k] == null || extra[k] === '' || extra[k] === false) delete extra[k]; renderTable(); }
-function renderExtra() { const L = { g8: 'more than 8 guests', nmMin: 'nearest permit ≥ ' + extra.nmMin + ' m', nmMax: 'nearest permit < ' + extra.nmMax + ' m', expYear: 'expired in ' + extra.expYear, ptype: 'type: ' + extra.ptype, host: 'host: ' + extra.host }; $('f-extra').innerHTML = Object.keys(extra).map(k => `<span class="chip" onclick="setExtra({${k}:null})" title="remove">${esc(L[k])} ✕</span>`).join(''); }
+function renderExtra() { const L = { g8: 'more than 8 guests', nmMin: 'nearest permit ≥ ' + extra.nmMin + ' m', nmMax: 'nearest permit < ' + extra.nmMax + ' m', expYear: 'expired in ' + extra.expYear, ptype: 'type: ' + extra.ptype, host: 'host: ' + extra.host, bldg: BLDG_L[extra.bldg] }; $('f-extra').innerHTML = Object.keys(extra).map(k => `<span class="chip" onclick="setExtra({${k}:null})" title="remove">${esc(L[k])} ✕</span>`).join(''); }
 const isProb = x => PROB.includes(x.cat);
+// permit-type display: the old CD-STR program reads better as "pre-2023"; a World Cup number CompassKC could not resolve (typo'd prefix) is still a Major Event number
+const PT_LEGACY = 'Pre-2023 registration (CD-STR, all expired)', PT_WC = 'Major Event (World Cup)';
+function normalizeTypes() { for (const x of S.listings) { if (x.pt === 'Legacy program (pre-2023)') x.pt = PT_LEGACY; if (!x.pt && x.wc) x.pt = PT_WC; } const t = {}; for (const x of S.listings) if (x.pt) t[x.pt] = (t[x.pt] || 0) + 1; S.summary.permitType = t; }
+// shared-building bands: how many listings resolve to the same city address
+let BC = {};
+function bldgCounts() { BC = {}; for (const x of S.listings) { const k = addrKey(x); if (k) BC[k] = (BC[k] || 0) + 1; } return BC; }
+const bldgBand = x => { const k = addrKey(x); if (!k) return '?'; const n = BC[k] || 1; return n <= 1 ? '1' : n <= 3 ? '2-3' : '4+'; };
+const BLDG_L = { '1': 'only listing at its address', '2-3': '2–3 listings at the address', '4+': '4 or more listings at the address', '?': 'address unknown (number not on file)' };
 const ORDER = ['World Cup permit, expired', 'Cites a denied permit', 'Cites a permit for a different property', 'One registration, multiple units', 'Exceeds building density limit', 'Cites an expired permit', 'Cites a non-existent permit', 'Number NOT in active registry', 'Invalid value', 'No registration section', 'Claims exempt', 'City status: Cancelled', 'City status: Hold', 'Permit issued (registry lag)', 'Hotel room, claims exempt', 'Currently permitted, listing shows old number', 'Active permit (prefix differs)', 'Active permit'];
 const SEV = Object.fromEntries(ORDER.map((c, i) => [c, i]));
 
@@ -330,17 +342,17 @@ async function boot() {
   loadCorrections();
 }
 async function loadSnapshot(date) {
-  S = await api('?snapshot=' + date); PROB = S.meta.problemCats; byId = Object.fromEntries(S.listings.map(x => [x.id, x])); for (const x of S.listings) { x.cat0 = x.cat; x.st0 = x.st; } if (corrections.length) applyVerified();
+  S = await api('?snapshot=' + date); PROB = S.meta.problemCats; byId = Object.fromEntries(S.listings.map(x => [x.id, x])); normalizeTypes(); for (const x of S.listings) { x.cat0 = x.cat; x.st0 = x.st; } if (corrections.length) applyVerified();
   $('meta').textContent = `${S.summary.listings.toLocaleString()} short-stay listings inside KCMO · ${S.summary.hosts} hosts · registry ${S.summary.registry.toLocaleString()} active permits · data pulled ${S.meta.date}`;
   renderOverview(); fillFilters(); renderTable(); renderOps(); renderOwners(); renderWC(); if (mapReady) mapData();
 }
 
 /* ---------- overview ---------- */
 function renderOverview() {
-  const s = S.summary, N = s.listings, pct = n => Math.round(100 * n / N) + '%';
+  const s = S.summary, N = s.listings, pct = n => Math.round(100 * n / N) + '%', wcBad = S.listings.filter(x => x.wc && isProb(x)).length;
   $('stats').innerHTML = [
-    ['', N, 'listings checked', ''], ['red', s.problems, `with a permit problem · ${pct(s.problems)}`, 'prob'], ['red', s.strong, 'strong cases', 'strong'],
-    ['amber', s.worldCup, 'still citing a World Cup permit', 'wc'], ['green', s.permitted, `permitted · ${pct(s.permitted)}`, 'ok'], ['', s.hotel, 'hotel rooms (excluded)', 'hotel'], ['', s.hostsWithProblems, 'hosts with a problem', 'hosts'],
+    ['', N, 'listings checked', ''], ['red', s.problems, `with a permit problem · ${pct(s.problems)}`, 'prob'], ['red', s.strong, 'confirmed unpermitted · no valid permit for the property or within 200 m', 'strong'],
+    ['amber', s.worldCup, `cite a World Cup permit · ${wcBad} with nothing else active, ${s.worldCup - wcBad} since re-permitted`, 'wc'], ['green', s.permitted, `properly permitted · ${pct(s.permitted)}`, 'ok'], ['', s.hotel, 'hotel rooms (excluded)', 'hotel'], ['', s.hostsWithProblems, `hosts with a problem · of ${s.hosts} hosts (${Math.round(100 * s.hostsWithProblems / s.hosts)}%)`, 'hosts'],
   ].map(([t, n, l, go]) => `<div class="stat ${t}" style="cursor:pointer" onclick="statGo('${go}')"><div class="n" data-n="${n}">0</div><div class="l">${l}</div></div>`).join('');
   countUp();
   renderSpotlight();
@@ -373,7 +385,7 @@ function renderSpotlight() {
     top && { k: top.bad, t: `problem listings under one host, "${top.host}"`, go: () => gotoHost(top.hid) },
     bigNum && { k: bigNum.length, t: `entire-home listings on one number, ${bigNum[0].reg}`, go: () => { resetFilters(); $('f-uf').checked = true; $('f-q').value = bigNum[0].reg; showView('listings'); renderTable(); } },
     topZip && { k: topZip[1], t: `problem listings in ZIP ${topZip[0]}, the most of any`, go: () => { resetFilters(); $('f-zip').value = topZip[0]; $('f-prob').checked = true; showView('listings'); renderTable(); } },
-    { k: S.summary.worldCup, t: 'listings still on a World Cup permit that expired 31 July', go: () => statGo('wc') },
+    { k: S.listings.filter(x => x.wc && isProb(x)).length, t: 'listings still operating on a World Cup permit that expired 31 July, nothing else active', go: () => gotoCat('World Cup permit, expired') },
     { k: far, t: 'problem listings with no permitted STR within 500 m', go: () => { resetFilters(); $('f-prob').checked = true; setExtra({ nmMin: 500 }); showView('listings'); } },
     { k: denied, t: 'listings operating on a permit the city denied', go: () => { resetFilters(); $('f-cat').value = 'Cites a denied permit'; showView('listings'); renderTable(); } },
   ].filter(Boolean);
@@ -397,7 +409,7 @@ function buildCharts() {
   // 2 problems by zip (stacked problem / permitted)
   const zc = {}; for (const x of L) if (x.zip) { const z = zc[x.zip] = zc[x.zip] || { p: 0, ok: 0 }; if (isProb(x)) z.p++; else if (!x.cat.startsWith('Hotel')) z.ok++; }
   const zips = Object.entries(zc).sort((a, b) => b[1].p - a[1].p).slice(0, 14);
-  mkChart('c-zip', { type: 'bar', data: { labels: zips.map(z => z[0]), datasets: [{ label: 'Problems', data: zips.map(z => z[1].p), backgroundColor: C_RED }, { label: 'Permitted', data: zips.map(z => z[1].ok), backgroundColor: C_GREEN }] }, options: { scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } } },
+  mkChart('c-zip', { type: 'bar', data: { labels: zips.map(z => z[0]), datasets: [{ label: 'Problems', data: zips.map(z => z[1].p), backgroundColor: C_RED }, { label: 'Properly permitted', data: zips.map(z => z[1].ok), backgroundColor: C_GREEN }] }, options: { scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } } },
     (i, d) => { resetFilters(); $('f-zip').value = zips[i][0]; if (d === 0) $('f-prob').checked = true; else $('f-cat').value = ''; showView('listings'); renderTable(); });
   // 3 top operators
   const ops = groupHosts().filter(o => o.bad).slice(0, 12);
@@ -407,16 +419,20 @@ function buildCharts() {
   const yrs = Object.keys(ey).sort();
   mkChart('c-exp', { type: 'bar', data: { labels: yrs, datasets: [{ label: 'Listings', data: yrs.map(y => ey[y]), backgroundColor: C_RED }] } }, i => { resetFilters(); $('f-cat').value = 'Cites an expired permit'; setExtra({ expYear: yrs[i] }); showView('listings'); });
   // 5 distance histogram (problems)
-  const bins = [[0, 60, '0–60 m (same building)'], [60, 200, '60–200 m'], [200, 500, '200–500 m'], [500, 1000, '500 m–1 km'], [1000, 1e9, 'over 1 km']];
+  const bins = [[0, 60, '0–60 m (same building or block)'], [60, 200, '60–200 m'], [200, 500, '200–500 m'], [500, 1000, '500 m–1 km'], [1000, 1e9, 'over 1 km']];
   const dc = bins.map(b => L.filter(x => isProb(x) && x.nm != null && x.nm >= b[0] && x.nm < b[1]).length);
   mkChart('c-dist', { type: 'bar', data: { labels: bins.map(b => b[2]), datasets: [{ label: 'Problem listings', data: dc, backgroundColor: bins.map(b => b[0] >= 200 ? C_RED : C_AMBER) }] } }, i => { resetFilters(); $('f-prob').checked = true; setExtra({ nmMin: bins[i][0], nmMax: bins[i][1] === 1e9 ? null : bins[i][1] }); showView('listings'); });
+  // 5b shared buildings: problem listings by how many listings share their city address
+  bldgCounts(); const bl = ['1', '2-3', '4+', '?'];
+  const bd = bl.map(b => L.filter(x => isProb(x) && bldgBand(x) === b).length);
+  mkChart('c-bldg', { type: 'bar', data: { labels: bl.map(b => BLDG_L[b].replace(/^./, c => c.toUpperCase())), datasets: [{ label: 'Problem listings', data: bd, backgroundColor: bl.map(b => b === '?' ? C_GREY : b === '1' ? C_AMBER : C_RED) }] }, options: { indexAxis: 'y', scales: { y: { ticks: { font: { size: 10 } } } } } }, i => { resetFilters(); $('f-prob').checked = true; setExtra({ bldg: bl[i] }); showView('listings'); });
   // 6 guest cap
   const gl = ['1–2', '3–4', '5–6', '7–8', '9–10', '11–12', '13–16', '16+']; const gb = g => g <= 2 ? 0 : g <= 4 ? 1 : g <= 6 ? 2 : g <= 8 ? 3 : g <= 10 ? 4 : g <= 12 ? 5 : g <= 16 ? 6 : 7;
   const gc = gl.map(() => 0); for (const x of L) if (x.g) gc[gb(x.g)]++;
   mkChart('c-guest', { type: 'bar', data: { labels: gl, datasets: [{ label: 'Listings', data: gc, backgroundColor: gl.map((_, i) => i >= 4 ? C_RED : C_GREEN) }] } }, i => { resetFilters(); if (i >= 4) setExtra({ g8: true }); else renderTable(); showView('listings'); });
   // 7 permit type doughnut
   const pt = Object.entries(s.permitType).sort((a, b) => b[1] - a[1]);
-  mkChart('c-type', { type: 'doughnut', data: { labels: pt.map(p => p[0]), datasets: [{ data: pt.map(p => p[1]), backgroundColor: pt.map(p => p[0].includes('Major') ? C_AMBER : p[0].includes('Non') ? C_BLUE : p[0].includes('Legacy') ? C_GREY : C_GREEN), borderWidth: 1 }] }, options: { cutout: '55%' } }, i => { resetFilters(); $('f-pt').value = pt[i][0]; showView('listings'); renderTable(); });
+  mkChart('c-type', { type: 'doughnut', data: { labels: pt.map(p => p[0]), datasets: [{ data: pt.map(p => p[1]), backgroundColor: pt.map(p => p[0].includes('Major') ? C_AMBER : p[0].includes('Non') ? C_BLUE : p[0].includes('Pre-2023') ? C_GREY : C_GREEN), borderWidth: 1 }] }, options: { cutout: '55%' } }, i => { resetFilters(); $('f-pt').value = pt[i][0]; showView('listings'); renderTable(); });
   // 8 registry issued by month
   const rm = {}; for (const r of S.registry) if (r.iss) rm[r.iss.slice(0, 7)] = (rm[r.iss.slice(0, 7)] || 0) + 1;
   const months = Object.keys(rm).sort().slice(-18);
@@ -430,7 +446,7 @@ function buildCharts() {
 function renderTrend() {
   if (INDEX.length < 2) return;
   const pts = [...INDEX].reverse(); $('c-trend').hidden = false; $('trend').textContent = 'Click a point to load that snapshot';
-  mkChart('c-trend', { type: 'line', data: { labels: pts.map(p => p.date), datasets: [['problems', C_RED], ['strong', '#7C2D12'], ['permitted', C_GREEN], ['listings', C_GREY]].map(([k, c]) => ({ label: k, data: pts.map(p => p[k]), borderColor: c, tension: .25 })) }, options: { plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } } }, i => { $('snap').value = pts[i].date; loadSnapshot(pts[i].date); });
+  mkChart('c-trend', { type: 'line', data: { labels: pts.map(p => p.date), datasets: [['problems', C_RED], ['strong', '#7C2D12'], ['permitted', C_GREEN], ['listings', C_GREY]].map(([k, c]) => ({ label: { strong: 'confirmed unpermitted', permitted: 'properly permitted' }[k] || k, data: pts.map(p => p[k]), borderColor: c, tension: .25 })) }, options: { plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } } }, i => { $('snap').value = pts[i].date; loadSnapshot(pts[i].date); });
 }
 function gotoCat(c) { resetFilters(); $('f-cat').value = c; showView('listings'); renderTable(); }
 function gotoHost(hid) { $('o-q').value = hid; $('o-min').checked = false; showView('operators'); renderOps(); setTimeout(() => { const d = $('ops').querySelector('details'); if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }, 50); }
@@ -447,13 +463,13 @@ function applyFilters() {
   const q = $('f-q').value.trim().toLowerCase(), cat = $('f-cat').value, pt = $('f-pt').value, prob = $('f-prob').checked, strong = $('f-strong').checked, wc = $('f-wc').checked, uf = $('f-uf').checked, zip = $('f-zip').value;
   renderExtra();
   filtered = S.listings.filter(x => (!cat || x.cat === cat) && (!pt || x.pt === pt) && (!prob || isProb(x)) && (!strong || x.st) && (!wc || x.wc) && (!uf || x.uf) && (!zip || x.zip === zip) &&
-    (!extra.g8 || (x.g || 0) > 8) && (extra.nmMin == null || (x.nm || 0) >= extra.nmMin) && (extra.nmMax == null || (x.nm || 0) < extra.nmMax) && (!extra.expYear || (x.ex || '').startsWith(extra.expYear)) && (!extra.ptype || (x.at || '') === extra.ptype) && (!extra.host || x.hid === extra.host) &&
+    (!extra.g8 || (x.g || 0) > 8) && (extra.nmMin == null || (x.nm || 0) >= extra.nmMin) && (extra.nmMax == null || (x.nm || 0) < extra.nmMax) && (!extra.expYear || (x.ex || '').startsWith(extra.expYear)) && (!extra.ptype || (x.at || '') === extra.ptype) && (!extra.host || x.hid === extra.host) && (!extra.bldg || bldgBand(x) === extra.bldg) &&
     (!q || [x.t, x.h, x.hid, x.reg, x.ca, x.own, x.mail, x.id].some(v => String(v || '').toLowerCase().includes(q))));
   filtered.sort((a, b) => { let va = a[sortK], vb = b[sortK]; if (sortK === 'cat') { va = SEV[va]; vb = SEV[vb]; } if (va == null) return 1; if (vb == null) return -1; return (va < vb ? -1 : va > vb ? 1 : 0) * sortD || (a.h || '').localeCompare(b.h || ''); });
 }
 const UNITCATS = new Set(['One registration, multiple units', 'Exceeds building density limit']);
 const groupMode = () => $('f-uf').checked || UNITCATS.has($('f-cat').value);
-const rowHtml = (x, cls) => `<tr class="click ${cls || ''}" onclick="openListing('${x.id}')"><td>${pill(x.cat)}${x.st ? ' <span class="pill red">strong</span>' : ''}${x.uf && !UNITCATS.has(x.cat) ? ' <span class="pill red" title="'+esc(x.ufd)+'">units</span>' : ''}</td><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${esc(x.reg || '(none)')}</td><td>${esc(x.cs)}</td><td>${esc(x.pt)}</td><td>${esc(x.ca)}</td><td>${esc(x.own)}</td><td>${x.nm ?? ''}</td><td>${x.g ?? ''}</td></tr>`;
+const rowHtml = (x, cls) => `<tr class="click ${cls || ''}" onclick="openListing('${x.id}')"><td>${pill(x.cat)}${x.st ? ' <span class="pill red">confirmed</span>' : ''}${x.uf && !UNITCATS.has(x.cat) ? ' <span class="pill red" title="'+esc(x.ufd)+'">units</span>' : ''}</td><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${esc(x.reg || '(none)')}</td><td>${esc(x.cs)}</td><td>${esc(x.pt)}</td><td>${esc(x.ca)}</td><td>${esc(x.own)}</td><td>${x.nm ?? ''}</td><td>${x.g ?? ''}</td></tr>`;
 function renderTable(keepPage) {
   applyFilters(); if (!keepPage) page = 0;
   if (groupMode()) {
@@ -476,7 +492,7 @@ function renderTable(keepPage) {
   $('tbody').innerHTML = filtered.slice(page * PER, page * PER + PER).map(x => rowHtml(x)).join('');
 }
 document.querySelectorAll('#tbl th').forEach(th => th.onclick = () => { const k = th.dataset.k; if (sortK === k) sortD = -sortD; else { sortK = k; sortD = 1; } renderTable(); });
-const HEAD=[['Finding','cat',x=>LABEL[x.cat]||x.cat],['Strong case','st',x=>x.st?'YES':''],['Listing','t'],['Airbnb link','url',x=>'https://www.airbnb.com/rooms/'+x.id],['Listing ID','id'],['Host','h'],['Host ID','hid'],['Host profile link','hostUrl',x=>'https://www.airbnb.com/users/profile/'+x.hid],
+const HEAD=[['Finding','cat',x=>LABEL[x.cat]||x.cat],['Confirmed unpermitted','st',x=>x.st?'YES':''],['Listing','t'],['Airbnb link','url',x=>'https://www.airbnb.com/rooms/'+x.id],['Listing ID','id'],['Host','h'],['Host ID','hid'],['Host profile link','hostUrl',x=>'https://www.airbnb.com/users/profile/'+x.hid],
   ['Number on listing','reg'],['CompassKC link','cx',x=>{const f=firstPermit(x.reg);return f?COMPASS(f):'';}],['City status','cs'],['City permit type','pt'],['World Cup','wc',x=>x.wc?'YES':''],['City expires','ex'],['Renewal on file','rn'],['City address','ca'],['City parcel','cp'],['Parcel Viewer link','pv',x=>x.cp?PARCEL(x.cp):''],
   ['Active permit on parcel','pa'],['Permit parcel distance (m)','pd'],['Nearest active permit (m)','nm'],['Unit / density flag','uf'],['Flag detail','ufd'],['Owner of record','own'],['Owner mailing address','mail'],['Guests','g'],['Lat','lat'],['Lng','lng'],['Note','note']];
 const rowVals=x=>HEAD.map(([,k,f])=>f?f(x):(x[k]??''));
@@ -492,7 +508,7 @@ function exportXlsx() {
   ws['!cols']=HEAD.map(h=>({wch:Math.min(40,Math.max(10,h[0].length+2))})); ws['!cols'][2]={wch:44}; ws['!cols'][15]={wch:30}; ws['!cols'][21]={wch:30}; ws['!cols'][22]={wch:34};
   ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:filtered.length,c:HEAD.length-1}})};
   XLSX.utils.book_append_sheet(wb,ws,'Listings');
-  const m=[['STR Permit Audit export'],['Snapshot',S.meta.date],['Rows',filtered.length],['Filters',[$('f-q').value&&'search: '+$('f-q').value,$('f-cat').value,$('f-pt').value,$('f-prob').checked&&'problems only',$('f-strong').checked&&'strong only',$('f-wc').checked&&'World Cup'].filter(Boolean).join(' · ')||'none'],[],['Every row links to the Airbnb listing, the host profile, the CompassKC permit record and the city Parcel Viewer.']];
+  const m=[['STR Permit Audit export'],['Snapshot',S.meta.date],['Rows',filtered.length],['Filters',[$('f-q').value&&'search: '+$('f-q').value,$('f-cat').value,$('f-pt').value,$('f-prob').checked&&'problems only',$('f-strong').checked&&'confirmed unpermitted only',$('f-wc').checked&&'World Cup'].filter(Boolean).join(' · ')||'none'],[],['Every row links to the Airbnb listing, the host profile, the CompassKC permit record and the city Parcel Viewer.']];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(m),'About');
   XLSX.writeFile(wb,`str-audit-${S.meta.date}.xlsx`);
 }
@@ -500,7 +516,7 @@ function exportXlsx() {
 function openListing(id) {
   const x = byId[id]; if (!x) return; const fp = firstPermit(x.reg);
   const my = corrections.filter(c => c.id === id);
-  $('drawer-body').innerHTML = `<h2>${esc(x.t)}</h2>${pill(x.cat)} ${x.st ? '<span class="pill red">strong case</span>' : ''} ${x.wc ? '<span class="pill amber">World Cup</span>' : ''}
+  $('drawer-body').innerHTML = `<h2>${esc(x.t)}</h2>${pill(x.cat)} ${x.st ? '<span class="pill red" title="No valid permit for the property or within 200 m">confirmed unpermitted</span>' : ''} ${x.wc ? '<span class="pill amber">World Cup</span>' : ''}
   <p><a href="https://www.airbnb.com/rooms/${x.id}" target="_blank" rel="noopener">Open on Airbnb</a> · <a href="https://www.airbnb.com/users/profile/${esc(x.hid)}" target="_blank" rel="noopener">Host profile</a>${fp ? ` · <a href="${COMPASS(fp)}" target="_blank" rel="noopener">CompassKC</a>` : ''}${x.cp ? ` · <a href="${PARCEL(x.cp)}" target="_blank" rel="noopener">Parcel Viewer</a>` : ''}</p>
   <dl><dt>Host</dt><dd>${esc(x.h)} <span class="muted">${esc(x.hid)}</span></dd><dt>Number on listing</dt><dd>${esc(x.reg || '(none)')}</dd><dt>City status</dt><dd>${esc(x.cs || '-')}${x.ex ? ' · expires ' + esc(x.ex) : ''}</dd><dt>Renewal on file</dt><dd>${esc(x.rn || '-')}</dd><dt>City permit type</dt><dd>${esc(x.pt || '-')}</dd><dt>City address</dt><dd>${esc(x.ca || '-')}</dd><dt>City parcel</dt><dd>${esc(x.cp || '-')}</dd><dt>Active permit on parcel</dt><dd>${esc(x.pa || 'none')}</dd><dt>Permit parcel distance</dt><dd>${x.pd != null ? x.pd.toLocaleString() + ' m' : '-'}</dd><dt>Nearest active permit</dt><dd>${x.nm != null ? x.nm.toLocaleString() + ' m' : '-'}</dd><dt>Owner of record</dt><dd>${esc(x.own || '-')}</dd><dt>Owner mailing</dt><dd>${esc(x.mail || '-')}</dd><dt>Guests</dt><dd>${x.g ?? '-'}</dd>${x.uf ? `<dt>Unit / density flag</dt><dd><b>${esc(x.uf)}</b>. ${esc(x.ufd)}</dd>` : ''}${x.note ? `<dt>Note</dt><dd>${esc(x.note)}</dd>` : ''}</dl>
   <div class="card"><h2>Log a correction</h2><select id="c-kind"><option value="fixed">Host fixed the listing</option><option value="hotel">This is a hotel</option><option value="midterm">Mid-term only, no permit needed</option><option value="wrong">Our finding is wrong</option><option value="other">Other</option></select>
@@ -564,6 +580,8 @@ function renderOwners() {
   $('owners').innerHTML = groups.slice(0, 400).map(g => opCard(g.owners.join(' / ') || '(no owner name)', esc(`mails to ${g.mail} · hosts: ${g.hosts.join(', ')}`), g.L)).join('') || '<p class="muted">No matches.</p>';
 }
 function renderWC() {
+  const all = S.listings.filter(x => x.wc), bad = all.filter(isProb);
+  $('wc-intro').innerHTML = `<b>${all.length}</b> listings still cite a temporary Major Event (World Cup) registration; every one of those expired 31 July 2026. <b>${bad.length}</b> have nothing else active on the parcel and count as problems ("World Cup permit, expired"). The other <b>${all.length - bad.length}</b> sit on a parcel that has since been issued a regular permit, so they are counted as properly permitted and are listed here for completeness.`;
   $('wc-body').innerHTML = S.listings.filter(x => x.wc).sort((a, b) => a.h.localeCompare(b.h)).map(x => `<tr class="click" onclick="openListing('${x.id}')"><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${esc(x.reg)}</td><td>${esc(x.cs)}</td><td>${pill(x.cat)}</td><td>${esc(x.own)}</td></tr>`).join('');
 }
 
@@ -576,7 +594,7 @@ function initMap() {
   const ready = () => { if (mapReady) return; mapReady = true; mapData(); };
   map.once('style.load', ready); map.once('load', ready);
   const poll = setInterval(() => { if (mapReady) return clearInterval(poll); if (map.isStyleLoaded()) { clearInterval(poll); ready(); } }, 250);
-  $('legend').innerHTML = [['Problem', COLOR.red], ['Unverifiable (exempt / nothing)', COLOR.amber], ['Permitted', COLOR.green], ['Hotel', COLOR.grey], ['Active permit (registry)', '#2563EB']].map(([l, c]) => `<span style="--c:${c}">${l}</span>`).join('');
+  $('legend').innerHTML = [['Problem', COLOR.red], ['Unverifiable (exempt / nothing)', COLOR.amber], ['Properly permitted', COLOR.green], ['Hotel', COLOR.grey], ['Active permit (registry)', '#2563EB']].map(([l, c]) => `<span style="--c:${c}">${l}</span>`).join('');
 }
 function mapData() {
   const fc = { type: 'FeatureCollection', features: S.listings.filter(x => x.lat).map(x => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [x.lng, x.lat] }, properties: { id: x.id, tone: tone(x.cat), prob: isProb(x) ? 1 : 0, hotel: x.cat.startsWith('Hotel') ? 1 : 0, st: x.st ? 1 : 0 } })) };
