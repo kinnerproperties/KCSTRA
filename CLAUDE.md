@@ -36,6 +36,12 @@ Push to `main` — Vercel picks it up automatically.
 - **State group:** MO Vacation Home Alliance — MOVHA.org
 - Board officers: Susan Brown (President), Laura Williams (VP), Jaymi Zehms (Treasurer), Grant Woodward (Secretary)
 
+## Blog (`/blog`) — markdown + Pages CMS
+- Posts are `content/posts/<title>.md` (frontmatter: title, date, author, description). Board members edit at app.pagescms.org (sign in with GitHub; needs write access on the repo — collaborators: sbrown816, stacyface82). Saving commits to `main` → Vercel rebuilds.
+- `scripts/build-blog.js` (Vercel `buildCommand`) renders `blog/index.html`, `blog/<slug>/index.html`, `blog/posts.json` (homepage "Latest" section). **Posts dated after today (America/Chicago) are skipped**, so a future date schedules a post.
+- `api/cron-rebuild.js` + `crons` in `vercel.json`: daily at 12:00 UTC (7 am CDT) Vercel Cron calls it with `Authorization: Bearer $CRON_SECRET`; it POSTs `DEPLOY_HOOK_URL` (deploy hook "daily-blog-rebuild", ref main) so scheduled posts go live the morning of their date. Env: `CRON_SECRET`, `DEPLOY_HOOK_URL` (production).
+- Add a blog editor: `gh api -X PUT repos/kinnerproperties/KCSTRA/collaborators/<login> -f permission=push`.
+
 ## STR Permit Audit (members-only, `/audit`) — Sep 2026
 A copy of the kinnerproperties.com admin STR Audit dashboard for board members. No public link; share the URL directly.
 - `audit/index.html` — the dashboard (KCSTRA palette, sign-in gate). Views: Overview, Map, Listings, Operators, Owners, World Cup, Corrections, Method.

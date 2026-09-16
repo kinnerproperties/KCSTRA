@@ -23,5 +23,11 @@
       "destination": "/audit",
       "permanent": false
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron-rebuild",
+      "schedule": "0 12 * * *"
+    }
   ]
 }

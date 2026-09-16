@@ -102,6 +102,11 @@ function formatDate(d) {
   return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
+// Today's date in Kansas City time (YYYY-MM-DD). Posts dated after today are skipped
+// so a future date works as a schedule; the daily cron (api/cron-rebuild.js) rebuilds
+// the site each morning so scheduled posts appear on their date.
+const TODAY = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+
 // Read and parse all posts
 const posts = fs.existsSync(POSTS_DIR)
   ? fs.readdirSync(POSTS_DIR)
@@ -111,6 +116,10 @@ const posts = fs.existsSync(POSTS_DIR)
         const slug = f.replace(/\.md$/, '');
         if (!data.title || !data.date) throw new Error(`Post ${f} is missing a title or date in its frontmatter`);
         return { slug, title: data.title, date: (data.date instanceof Date ? data.date.toISOString() : String(data.date)).slice(0, 10), author: data.author || 'KCSTRA', description: data.description || '', html: marked.parse(content) };
+      })
+      .filter((p) => {
+        if (p.date > TODAY) { console.log(`Scheduled (not yet published): ${p.slug} — goes live ${p.date}`); return false; }
+        return true;
       })
       .sort((a, b) => b.date.localeCompare(a.date))
   : [];
