@@ -147,6 +147,7 @@ svg.spark { width: 100%; height: 120px; }
       <button data-view="operators">Operators</button>
       <button data-view="owners">Owners</button>
       <button data-view="worldcup">World Cup</button>
+      <button data-view="enforce">Enforcement <span id="enf-badge" class="pill grey hidden"></span></button>
       <button data-view="corrections">Corrections <span id="corr-badge" class="pill amber hidden"></span></button>
       <button data-view="method">Method</button>
       <button data-view="activity" id="act-btn" class="hidden">Activity</button>
@@ -195,6 +196,7 @@ svg.spark { width: 100%; height: 120px; }
         <label><input type="checkbox" id="f-strong" onchange="renderTable()"> Confirmed unpermitted</label>
         <label><input type="checkbox" id="f-wc" onchange="renderTable()"> World Cup</label>
         <label><input type="checkbox" id="f-uf" onchange="renderTable()"> Unit / density flag</label>
+        <label><input type="checkbox" id="f-off" onchange="renderTable()"> Offline now</label>
         <select id="f-zip" onchange="renderTable()"><option value="">All ZIPs</option></select>
         <span class="chips" id="f-extra"></span>
         <button class="btn small" onclick="exportCsv()">Export CSV</button>
@@ -223,6 +225,34 @@ svg.spark { width: 100%; height: 120px; }
       <div class="tablewrap"><table><thead><tr><th>Listing</th><th>Host</th><th>Number</th><th>City status</th><th>Finding</th><th>Owner of record</th></tr></thead><tbody id="wc-body"></tbody></table></div>
     </section>
 
+    <section class="view" data-view="enforce">
+      <p class="muted">Two things on one timeline: what listings do (a daily probe opens every listing we have ever seen on Airbnb; a listing that stops opening is <b>offline</b>, and one that comes back within 45 days or flips twice is a <b>hide-and-reopen</b> suspect) and what the city does (letters, takedowns, citations, denials, permits lapsing from the registry between snapshots). Log city actions here or from a listing's drawer.</p>
+      <div class="stats" id="enf-stats"></div>
+      <div class="card"><h2>Log a city action</h2>
+        <div class="filters" data-form-scope="off">
+          <select id="e-kind"><option value="letter">City letter / notice sent</option><option value="takedown">Listing taken down</option><option value="citation">Citation / fine</option><option value="complaint">Complaint filed (311 / RE)</option><option value="permit_denied">Permit denied</option><option value="permit_revoked">Permit revoked</option><option value="permit_issued">Permit issued</option><option value="court">Court / hearing</option><option value="note">Note</option><option value="other">Other</option></select>
+          <input id="e-id" placeholder="Listing (title or id)" list="e-list" style="min-width:220px"><datalist id="e-list"></datalist>
+          <input id="e-reg" placeholder="Permit #" style="width:130px">
+          <input id="e-addr" placeholder="Address" style="min-width:180px">
+          <input id="e-date" type="date">
+          <input id="e-src" placeholder="Source (who told you / document)" style="min-width:180px">
+          <input id="e-link" placeholder="Link (letter PDF, CompassKC, email)" style="min-width:200px">
+        </div>
+        <textarea id="e-note" placeholder="What happened? Quote the letter, the case number, who at the city…" style="width:100%;min-height:60px;padding:8px;border:1px solid var(--border);border-radius:8px"></textarea>
+        <div style="margin-top:8px"><button class="btn primary" onclick="logEvent()">Log</button> <span class="muted" id="e-msg"></span></div>
+      </div>
+      <div class="filters" data-form-scope="off">
+        <select id="ef-kind" onchange="renderEnforce()"><option value="">All events</option><option value="city">City actions only</option><option value="offline">Offline / came back</option><option value="suspect">Hide-and-reopen suspects</option><option value="permit">Registry: permits lapsed / new</option><option value="finding">Finding changed between snapshots</option></select>
+        <input id="ef-q" placeholder="Search listing, permit, address, note" oninput="renderEnforce()" style="min-width:240px">
+        <span class="muted" id="ef-count"></span>
+        <button class="btn small" onclick="exportEvents()">Export CSV</button>
+        
+      </div>
+      <div class="tablewrap" style="max-height:60vh"><table><thead><tr><th>Date</th><th>Event</th><th>Listing</th><th>Permit / address</th><th>Detail</th><th>By</th><th></th></tr></thead><tbody id="enf-body"></tbody></table></div>
+      <div class="card"><h2>Listings offline right now</h2><p class="muted">Still in the audit with their last finding. A listing can be hidden by the host, snoozed, or removed by Airbnb; the probe cannot tell which, so read it with the city log above.</p>
+        <div class="tablewrap" style="max-height:50vh"><table><thead><tr><th>Listing</th><th>Host</th><th>Last finding</th><th>Offline since</th><th>Cycles</th><th>After city action</th></tr></thead><tbody id="off-body"></tbody></table></div></div>
+    </section>
+
     <section class="view" data-view="corrections">
       <p class="muted">Correction requests logged from listing pages. Marking one <b>Verified</b> applies it on this page immediately (fixed → active permit, hotel → hotel room, mid-term or wrong → dropped from the problem counts) and the next audit run bakes it into the snapshot. Rejected ones change nothing. Please only mark Verified after checking the listing and CompassKC yourself.</p>
       <div class="tablewrap"><table><thead><tr><th>Logged</th><th>Listing</th><th>Was</th><th>Kind</th><th>Note</th><th>Status</th><th></th></tr></thead><tbody id="corr-body"></tbody></table></div>
@@ -241,7 +271,8 @@ svg.spark { width: 100%; height: 120px; }
       <div class="card">
         <h2>How the data is produced</h2>
         <ol>
-          <li><b>Find the listings.</b> Airbnb search run through a third-party scraping service on its own servers, all 40 KCMO zip codes plus neighbourhood, price-band and date slices. No Airbnb account is used. Every pin is tested against the City of KCMO boundary polygon; listings outside are dropped. Listings that only appear for 30-night-or-longer searches are mid-term rentals, which need no permit, and are excluded.</li>
+          <li><b>Find the listings.</b> Airbnb search run through a third-party scraping service on its own servers, all 40 KCMO zip codes plus neighbourhood, price-band and date slices. No Airbnb account is used. Every pin is tested against the City of KCMO boundary polygon; listings outside are dropped. Listings that only appear for 30-night-or-longer searches are mid-term rentals, which need no permit, and are excluded. Listings whose Airbnb page names any city other than Kansas City, Missouri are removed (host-entered address beats a fuzzed pin near a border or enclave).</li>
+          <li><b>Listing status and enforcement.</b> A daily probe (4 AM CT) opens every listing the audit has ever seen on Airbnb. A listing that stops opening is marked offline; one that comes back within 45 days, or flips twice, is flagged as a hide-and-reopen suspect, because a host dodging enforcement can hide the listing while it is booked and re-open it later. City actions (letters, takedowns, citations, denials) are logged by hand on the Enforcement tab, and every new snapshot is diffed against the previous one for permits that lapsed and findings that changed. Those events sit on one timeline so enforcement can be read against listing behaviour.</li>
           <li><b>Read the number.</b> The Registration Details text the host typed. It is not an official Airbnb field.</li>
           <li><b>Registry.</b> Each number is compared to the city's live short-term rental registry (currently issued permits only). Prefix variants are matched.</li>
           <li><b>CompassKC.</b> Every cited number is looked up for status (Issued, Expired, Denied, not found), type (Resident, Non-Resident, Major Event) and the parcel it belongs to.</li>
@@ -339,7 +370,7 @@ async function boot() {
   const d = await api(''); INDEX = d.snapshots || []; if (d.user) ME = d.user; $('who').textContent = ME ? 'Signed in as ' + ME : ''; IS_ADMIN = !!d.admin; $('act-btn').classList.toggle('hidden', !IS_ADMIN); startHeartbeat();
   $('snap').innerHTML = INDEX.map(s => `<option value="${s.date}">${s.date} · ${s.listings} listings</option>`).join('');
   if (INDEX.length) await loadSnapshot(INDEX[0].date);
-  loadCorrections();
+  loadCorrections(); loadStatus();
 }
 async function loadSnapshot(date) {
   S = await api('?snapshot=' + date); PROB = S.meta.problemCats; byId = Object.fromEntries(S.listings.map(x => [x.id, x])); normalizeTypes(); for (const x of S.listings) { x.cat0 = x.cat; x.st0 = x.st; } if (corrections.length) applyVerified();
@@ -460,16 +491,16 @@ function fillFilters() {
   $('f-zip').innerHTML = '<option value="">All ZIPs</option>' + Object.entries(zips).sort((a, b) => b[1] - a[1]).map(([z, n]) => `<option value="${z}">${z} (${n})</option>`).join('');
 }
 function applyFilters() {
-  const q = $('f-q').value.trim().toLowerCase(), cat = $('f-cat').value, pt = $('f-pt').value, prob = $('f-prob').checked, strong = $('f-strong').checked, wc = $('f-wc').checked, uf = $('f-uf').checked, zip = $('f-zip').value;
+  const q = $('f-q').value.trim().toLowerCase(), cat = $('f-cat').value, pt = $('f-pt').value, prob = $('f-prob').checked, strong = $('f-strong').checked, wc = $('f-wc').checked, uf = $('f-uf').checked, zip = $('f-zip').value, off = $('f-off').checked;
   renderExtra();
-  filtered = S.listings.filter(x => (!cat || x.cat === cat) && (!pt || x.pt === pt) && (!prob || isProb(x)) && (!strong || x.st) && (!wc || x.wc) && (!uf || x.uf) && (!zip || x.zip === zip) &&
+  filtered = S.listings.filter(x => (!cat || x.cat === cat) && (!pt || x.pt === pt) && (!prob || isProb(x)) && (!strong || x.st) && (!wc || x.wc) && (!uf || x.uf) && (!zip || x.zip === zip) && (!off || (STATUS[x.id] && STATUS[x.id].state === 'gone')) &&
     (!extra.g8 || (x.g || 0) > 8) && (extra.nmMin == null || (x.nm || 0) >= extra.nmMin) && (extra.nmMax == null || (x.nm || 0) < extra.nmMax) && (!extra.expYear || (x.ex || '').startsWith(extra.expYear)) && (!extra.ptype || (x.at || '') === extra.ptype) && (!extra.host || x.hid === extra.host) && (!extra.bldg || bldgBand(x) === extra.bldg) &&
     (!q || [x.t, x.h, x.hid, x.reg, x.ca, x.own, x.mail, x.id].some(v => String(v || '').toLowerCase().includes(q))));
   filtered.sort((a, b) => { let va = a[sortK], vb = b[sortK]; if (sortK === 'cat') { va = SEV[va]; vb = SEV[vb]; } if (va == null) return 1; if (vb == null) return -1; return (va < vb ? -1 : va > vb ? 1 : 0) * sortD || (a.h || '').localeCompare(b.h || ''); });
 }
 const UNITCATS = new Set(['One registration, multiple units', 'Exceeds building density limit']);
 const groupMode = () => $('f-uf').checked || UNITCATS.has($('f-cat').value);
-const rowHtml = (x, cls) => `<tr class="click ${cls || ''}" onclick="openListing('${x.id}')"><td>${pill(x.cat)}${x.st ? ' <span class="pill red">confirmed</span>' : ''}${x.uf && !UNITCATS.has(x.cat) ? ' <span class="pill red" title="'+esc(x.ufd)+'">units</span>' : ''}</td><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${esc(x.reg || '(none)')}</td><td>${esc(x.cs)}</td><td>${esc(x.pt)}</td><td>${esc(x.ca)}</td><td>${esc(x.own)}</td><td>${x.nm ?? ''}</td><td>${x.g ?? ''}</td></tr>`;
+const rowHtml = (x, cls) => `<tr class="click ${cls || ''}" onclick="openListing('${x.id}')"><td>${pill(x.cat)}${x.st ? ' <span class="pill red">confirmed</span>' : ''}${x.uf && !UNITCATS.has(x.cat) ? ' <span class="pill red" title="'+esc(x.ufd)+'">units</span>' : ''}${stChip(x.id)}</td><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${esc(x.reg || '(none)')}</td><td>${esc(x.cs)}</td><td>${esc(x.pt)}</td><td>${esc(x.ca)}</td><td>${esc(x.own)}</td><td>${x.nm ?? ''}</td><td>${x.g ?? ''}</td></tr>`;
 function renderTable(keepPage) {
   applyFilters(); if (!keepPage) page = 0;
   if (groupMode()) {
@@ -519,6 +550,7 @@ function openListing(id) {
   $('drawer-body').innerHTML = `<h2>${esc(x.t)}</h2>${pill(x.cat)} ${x.st ? '<span class="pill red" title="No valid permit for the property or within 200 m">confirmed unpermitted</span>' : ''} ${x.wc ? '<span class="pill amber">World Cup</span>' : ''}
   <p><a href="https://www.airbnb.com/rooms/${x.id}" target="_blank" rel="noopener">Open on Airbnb</a> · <a href="https://www.airbnb.com/users/profile/${esc(x.hid)}" target="_blank" rel="noopener">Host profile</a>${fp ? ` · <a href="${COMPASS(fp)}" target="_blank" rel="noopener">CompassKC</a>` : ''}${x.cp ? ` · <a href="${PARCEL(x.cp)}" target="_blank" rel="noopener">Parcel Viewer</a>` : ''}</p>
   <dl><dt>Host</dt><dd>${esc(x.h)} <span class="muted">${esc(x.hid)}</span></dd><dt>Number on listing</dt><dd>${esc(x.reg || '(none)')}</dd><dt>City status</dt><dd>${esc(x.cs || '-')}${x.ex ? ' · expires ' + esc(x.ex) : ''}</dd><dt>Renewal on file</dt><dd>${esc(x.rn || '-')}</dd><dt>City permit type</dt><dd>${esc(x.pt || '-')}</dd><dt>City address</dt><dd>${esc(x.ca || '-')}</dd><dt>City parcel</dt><dd>${esc(x.cp || '-')}</dd><dt>Active permit on parcel</dt><dd>${esc(x.pa || 'none')}</dd><dt>Permit parcel distance</dt><dd>${x.pd != null ? x.pd.toLocaleString() + ' m' : '-'}</dd><dt>Nearest active permit</dt><dd>${x.nm != null ? x.nm.toLocaleString() + ' m' : '-'}</dd><dt>Owner of record</dt><dd>${esc(x.own || '-')}</dd><dt>Owner mailing</dt><dd>${esc(x.mail || '-')}</dd><dt>Guests</dt><dd>${x.g ?? '-'}</dd>${x.uf ? `<dt>Unit / density flag</dt><dd><b>${esc(x.uf)}</b>. ${esc(x.ufd)}</dd>` : ''}${x.note ? `<dt>Note</dt><dd>${esc(x.note)}</dd>` : ''}</dl>
+  ${drawerStatusHtml(String(x.id))}
   <div class="card"><h2>Log a correction</h2><select id="c-kind"><option value="fixed">Host fixed the listing</option><option value="hotel">This is a hotel</option><option value="midterm">Mid-term only, no permit needed</option><option value="wrong">Our finding is wrong</option><option value="other">Other</option></select>
   <textarea id="c-note" placeholder="What did you verify, and where?"></textarea><button class="btn primary" onclick="logCorrection('${x.id}')">Log</button>
   ${my.length ? '<ul class="muted">' + my.map(c => `<li>${c.ts.slice(0, 10)} · ${esc(c.kind)} · ${esc(c.status)} · ${esc(c.note)}</li>`).join('') + '</ul>' : ''}</div>`;
@@ -549,6 +581,48 @@ async function loadCorrections() {
 const pill2 = s => `<span class="pill ${s === 'open' ? 'amber' : s === 'verified' ? 'green' : 'grey'}">${esc(s)}</span>`;
 async function delCorr(ts) { await api('', { method: 'POST', body: JSON.stringify({ action: 'correction-delete', ts }) }); loadCorrections(); }
 async function setCorr(ts, status) { await api('', { method: 'POST', body: JSON.stringify({ action: 'correction-status', ts, status }) }); loadCorrections(); }
+
+/* ---------- listing status + enforcement log ---------- */
+let STATUS = {}, EVENTS = [], STSUM = {};
+const EK = { letter: ['City letter', 'amber'], takedown: ['Taken down', 'red'], citation: ['Citation', 'red'], complaint: ['Complaint', 'amber'], permit_denied: ['Permit denied', 'red'], permit_revoked: ['Permit revoked', 'red'], permit_issued: ['Permit issued', 'green'], court: ['Court', 'red'], note: ['Note', 'grey'], other: ['Other', 'grey'],
+  went_offline: ['Went offline', 'grey'], came_back: ['Came back', 'amber'], permit_lapsed: ['Permit lapsed', 'amber'], permit_new: ['New permit', 'green'], finding_changed: ['Finding changed', 'blue'], listing_dropped: ['Left the audit', 'grey'], listing_new: ['New listing', 'blue'] };
+const CITY_K = new Set(['letter', 'takedown', 'citation', 'complaint', 'permit_denied', 'permit_revoked', 'permit_issued', 'court', 'note', 'other']);
+const ekPill = k => { const [l, c] = EK[k] || [k, 'grey']; return `<span class="pill ${c}">${esc(l)}</span>`; };
+const stOf = id => STATUS[id] || null;
+const stChip = id => { const r = stOf(id); if (!r) return ''; if (r.state === 'gone') return ` <span class="pill grey" title="Not opening on Airbnb since ${esc(r.since || '')}">offline</span>`; if (r.suspect) return ` <span class="pill red" title="${r.cycles} offline→online cycles; came back ${esc(r.lastBack || '')}">reopened</span>`; return ''; };
+const fmtD = s => s ? String(s).slice(0, 10) : '';
+async function loadStatus() { try { const d = await api('?status=1'); STATUS = d.status || {}; delete STATUS._meta; STSUM = d.summary || {}; } catch { STATUS = {}; } try { EVENTS = (await api('?events=1')).events || []; } catch { EVENTS = []; }
+  const off = STSUM.gone || 0; const b = $('enf-badge'); if (b) { b.textContent = off; b.classList.toggle('hidden', !off); } if (S) renderTable(true); }
+function enfListingLink(e) { const x = e.id && byId[e.id]; return e.id ? `<a href="#" onclick="openListing('${esc(e.id)}');return false">${esc(e.title || (x && x.t) || e.id)}</a>${x ? ' ' + pill(x.cat) : ''}` : '<span class="muted">-</span>'; }
+function renderEnforce() {
+  const meta = STSUM || {}; const lettered = EVENTS.filter(e => e.kind === 'letter').length, down = EVENTS.filter(e => e.kind === 'takedown').length, lapsed = EVENTS.filter(e => e.kind === 'permit_lapsed').length;
+  const stat = (n, t, go) => `<div class="stat click" style="cursor:pointer" onclick="${go}"><div class="n">${n}</div><div class="l">${t}</div></div>`;
+  $('enf-stats').innerHTML = stat(meta.gone || 0, 'listings offline right now', "document.getElementById('off-body').scrollIntoView({behavior:'smooth'})") + stat(meta.suspects || 0, 'hide-and-reopen suspects', "$('ef-kind').value='suspect';renderEnforce()") + stat(lettered, 'city letters logged', "$('ef-kind').value='city';renderEnforce()") + stat(down, 'takedowns logged', "$('ef-kind').value='city';renderEnforce()") + stat(lapsed, 'permits lapsed between snapshots', "$('ef-kind').value='permit';renderEnforce()")
+    + `<div class="stat"><div class="n" style="font-size:18px;font-family:inherit;font-weight:600">${meta.lastRun ? esc(new Date(meta.lastRun).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })) : 'never'}</div><div class="l">last probe · ${meta.checked || 0} checked, ${meta.errors || 0} errors · ${meta.listings || 0} tracked</div></div>`;
+  const k = $('ef-kind').value, q = $('ef-q').value.trim().toLowerCase();
+  const rows = EVENTS.filter(e => (k === '' || (k === 'city' && CITY_K.has(e.kind)) || (k === 'offline' && (e.kind === 'went_offline' || e.kind === 'came_back')) || (k === 'suspect' && e.suspect) || (k === 'permit' && (e.kind === 'permit_lapsed' || e.kind === 'permit_new')) || (k === 'finding' && e.kind === 'finding_changed'))
+    && (!q || [e.title, e.id, e.reg, e.address, e.note, e.source, e.by].some(v => String(v || '').toLowerCase().includes(q))));
+  $('ef-count').textContent = `${rows.length} of ${EVENTS.length}`;
+  $('enf-body').innerHTML = rows.slice(0, 600).map(e => `<tr${e.suspect ? ' style="background:var(--red-bg)"' : ''}><td>${esc(e.date || fmtD(e.ts))}</td><td>${ekPill(e.kind)}</td><td>${enfListingLink(e)}</td><td>${esc(e.reg || '')}${e.reg && e.address ? ' · ' : ''}${esc(e.address || '')}</td><td>${esc(e.note || '')}${e.link ? ` <a href="${esc(e.link)}" target="_blank" rel="noopener">link</a>` : ''}${e.source ? ` <span class="muted">· ${esc(e.source)}</span>` : ''}</td><td class="muted">${e.auto ? 'auto' : esc(e.by || '')}</td><td>${e.auto ? '' : `<button class="btn small" onclick="if(confirm('Delete this entry?'))delEvent('${e.ts}')">Delete</button>`}</td></tr>`).join('') || '<tr><td colspan="7" class="muted">Nothing logged yet. The first probe runs tonight; log city letters and takedowns above as they happen.</td></tr>';
+  const off = Object.entries(STATUS).filter(([, r]) => r.state === 'gone').sort((a, b) => (b[1].since || '').localeCompare(a[1].since || ''));
+  $('off-body').innerHTML = off.map(([id, r]) => `<tr class="click" onclick="openListing('${id}')"><td>${esc(r.t || id)}</td><td>${esc(r.h || '')}</td><td>${byId[id] ? pill(byId[id].cat) : esc(r.cat || '')}</td><td>${fmtD(r.since)}</td><td>${r.cycles || 0}</td><td>${r.afterEnforcement ? ekPill(r.afterEnforcement) : ''}</td></tr>`).join('') || '<tr><td colspan="6" class="muted">None known offline.</td></tr>';
+  if (S && !$('e-list').children.length) $('e-list').innerHTML = S.listings.map(x => `<option value="${esc(x.id)}">${esc(x.t)} · ${esc(x.h)}</option>`).join('');
+  if (!$('e-date').value) $('e-date').value = new Date().toISOString().slice(0, 10);
+}
+function prefillEvent(id, kind) { showView('enforce'); renderEnforce(); $('e-kind').value = kind; $('e-id').value = id; const x = byId[id]; if (x) { $('e-reg').value = firstPermit(x.reg) || x.reg || ''; $('e-addr').value = x.ca || ''; } $('e-note').focus(); }
+async function logEvent() {
+  const raw = $('e-id').value.trim(); let id = raw.replace(/\D/g, ''); if (raw && !byId[id]) { const m = S.listings.find(x => x.t.toLowerCase() === raw.toLowerCase()); if (m) id = m.id; }
+  const body = { action: 'event', kind: $('e-kind').value, id, title: byId[id] ? byId[id].t : '', reg: $('e-reg').value.trim(), address: $('e-addr').value.trim(), date: $('e-date').value, source: $('e-src').value.trim(), link: $('e-link').value.trim(), note: $('e-note').value.trim() };
+  const r = await api('', { method: 'POST', body: JSON.stringify(body) });
+  if (r.ok) { ['e-id', 'e-reg', 'e-addr', 'e-src', 'e-link', 'e-note'].forEach(i => $(i).value = ''); $('e-msg').textContent = 'Logged.'; setTimeout(() => $('e-msg').textContent = '', 2000); await loadStatus(); renderEnforce(); } else $('e-msg').textContent = r.error || 'Failed';
+}
+async function delEvent(ts) { await api('', { method: 'POST', body: JSON.stringify({ action: 'event-delete', ts }) }); await loadStatus(); renderEnforce(); }
+function exportEvents() { const H = ['date', 'kind', 'listing', 'listing id', 'permit', 'address', 'note', 'source', 'link', 'by']; const csv = [H.join(',')].concat(EVENTS.map(e => [e.date || fmtD(e.ts), e.kind, e.title || '', e.id || '', e.reg || '', e.address || '', e.note || '', e.source || '', e.link || '', e.auto ? 'auto' : e.by || ''].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','))).join('\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })); a.download = 'str-audit-enforcement.csv'; a.click(); }
+function drawerStatusHtml(id) {
+  const r = stOf(id); const ev = EVENTS.filter(e => e.id === id).slice(0, 12);
+  const line = !r ? '' : r.state === 'gone' ? `<span class="pill grey">offline</span> not opening on Airbnb since ${fmtD(r.since)}${r.afterEnforcement ? ' · after a logged ' + esc(r.afterEnforcement.replace('_', ' ')) : ''}` : r.state === 'live' ? `<span class="pill green">live</span> on Airbnb as of ${fmtD(r.checkedAt)}${r.cycles ? ` · came back ${r.cycles} time${r.cycles === 1 ? '' : 's'}${r.suspect ? ' <span class="pill red">hide-and-reopen</span>' : ''}` : ''}` : '<span class="pill grey">not probed yet</span>';
+  return `<div class="card"><h2>Status &amp; enforcement</h2><p>${line}</p>${ev.length ? '<ul class="muted">' + ev.map(e => `<li>${esc(e.date || fmtD(e.ts))} · ${ekPill(e.kind)} ${esc(e.note || '')}</li>`).join('') + '</ul>' : ''}<p><button class="btn small" onclick="prefillEvent('${id}','letter')">Log city letter</button> <button class="btn small" onclick="prefillEvent('${id}','takedown')">Log takedown</button> <button class="btn small" onclick="prefillEvent('${id}','complaint')">Log complaint</button></p></div>`;
+}
 
 /* ---------- operators + owners ---------- */
 function groupHosts() {
@@ -622,6 +696,7 @@ function showView(v) {
   document.querySelectorAll('.view').forEach(s => s.classList.toggle('active', s.dataset.view === v));
   if (v === 'map') { initMap(); setTimeout(() => map && map.resize(), 50); }
   if (v === 'activity') renderActivity();
+  if (v === 'enforce') renderEnforce();
   if (v !== curView || !hbTimer) ping(v); curView = v;
   try { localStorage.setItem('str-audit-view', v); } catch {}
 }
