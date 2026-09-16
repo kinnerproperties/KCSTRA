@@ -592,7 +592,7 @@ const stOf = id => STATUS[id] || null;
 const stChip = id => { const r = stOf(id); if (!r) return ''; if (r.state === 'gone') return ` <span class="pill grey" title="Not opening on Airbnb since ${esc(r.since || '')}">offline</span>`; if (r.suspect) return ` <span class="pill red" title="${r.cycles} offline→online cycles; came back ${esc(r.lastBack || '')}">reopened</span>`; return ''; };
 const fmtD = s => s ? String(s).slice(0, 10) : '';
 async function loadStatus() { try { const d = await api('?status=1'); STATUS = d.status || {}; delete STATUS._meta; STSUM = d.summary || {}; } catch { STATUS = {}; } try { EVENTS = (await api('?events=1')).events || []; } catch { EVENTS = []; }
-  const off = STSUM.gone || 0; const b = $('enf-badge'); if (b) { b.textContent = off; b.classList.toggle('hidden', !off); } if (S) renderTable(true); }
+  const off = STSUM.gone || 0; const b = $('enf-badge'); if (b) { b.textContent = off; b.classList.toggle('hidden', !off); } if (S) renderTable(true); if (curView === 'enforce') renderEnforce(); }
 function enfListingLink(e) { const x = e.id && byId[e.id]; return e.id ? `<a href="#" onclick="openListing('${esc(e.id)}');return false">${esc(e.title || (x && x.t) || e.id)}</a>${x ? ' ' + pill(x.cat) : ''}` : '<span class="muted">-</span>'; }
 function renderEnforce() {
   const meta = STSUM || {}; const lettered = EVENTS.filter(e => e.kind === 'letter').length, down = EVENTS.filter(e => e.kind === 'takedown').length, lapsed = EVENTS.filter(e => e.kind === 'permit_lapsed').length;
