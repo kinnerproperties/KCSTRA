@@ -1,0 +1,101 @@
+{
+ "note": "Listings removed from the audit because Airbnb states a city/state other than Kansas City, Missouri. Checked 2026-09-16 against each live listing page.",
+ "ids": {
+  "1687828158009111961": {
+   "city": "Avondale",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "World Cup experience centrally located"
+  },
+  "39802518": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Room #1"
+  },
+  "1565384356515304940": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "World Cup Luxury! Mid Century home/salt water pool"
+  },
+  "1707132896616591786": {
+   "city": "Kansas City",
+   "state": "Upscale Downtown Loft - Apartments for Rent in Kansas City",
+   "reason": "Airbnb location",
+   "title": "Room for Rent in Spacious, Upscale Downtown Loft"
+  },
+  "1683468130247882446": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Elegant 5 Beds & 5 Bath Home in Lees Summit"
+  },
+  "1689448149460904449": {
+   "city": "Houston Lake",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Cozy-Relaxing-Hot Tub"
+  },
+  "1672773013470253229": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Welcome to KC 10-15 minutes to Arrowhead Stadium"
+  },
+  "682616176474792313": {
+   "city": "Platte Woods",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Adorable 1-bedroom apartment"
+  },
+  "1110149401375213589": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "KC Upper-Level Hideaway near Stadiums"
+  },
+  "1633366579606427271": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Updated home in great location! Close to KU Med."
+  },
+  "981851140647804071": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Modern Home By Arrowhead Stadium"
+  },
+  "1653934503823847972": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Beautiful Place in the Heart of Kansas City"
+  },
+  "1503850979885769623": {
+   "city": "North Kansas City",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "The Lockwood Loft | Modern 2BR Townhome w/ Garage"
+  },
+  "1212464852673911982": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Stadium Access for Royals/Chiefs"
+  },
+  "563001410477547525": {
+   "city": "Kansas City",
+   "state": "Missouri",
+   "reason": "pin in unincorporated Platte County, outside the city polygon; 28-night minimum",
+   "title": "Large 3 BR Home Near Downtown & Airport"
+  },
+  "1644360664598676405": {
+   "city": "Kansas City",
+   "state": "Missouri",
+   "reason": "pin in Gladstone, outside the city polygon; 30-night minimum (mid-term)",
+   "title": "Bright KC Retreat | Close to World Cup Matches"
+  }
+ }
+}
