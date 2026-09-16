@@ -169,6 +169,7 @@ svg.spark { width: 100%; height: 120px; }
         <div class="chart"><h3>Advertised guest cap</h3><div class="hint">The ordinance caps a unit at 8 guests. Click a bar</div><canvas id="c-guest"></canvas></div>
         <div class="chart"><h3>City permit type on the cited number</h3><div class="hint">Per CompassKC, for every listing whose number resolves, permitted and problem listings alike. Click a slice</div><canvas id="c-type"></canvas></div>
         <div class="chart"><h3>Active registrations issued, by month</h3><div class="hint">The city's live registry of currently issued permits. Renewals cluster in spring</div><canvas id="c-reg"></canvas></div>
+        <div class="chart"><h3>How long listings have operated</h3><div class="hint">Airbnb never shows when a listing was created, so the first review is the earliest proof it was taking guests. Problem listings in red. Click a bar</div><canvas id="c-age"></canvas></div>
         <div class="chart"><h3>Airbnb listing type</h3><div class="hint">Problem share by property type. Click a bar</div><canvas id="c-ptype"></canvas></div>
         <div class="chart" id="trend-card"><h3>Trend across snapshots</h3><div class="hint" id="trend">One snapshot so far. The trend appears after the next pipeline run.</div><canvas id="c-trend" hidden></canvas></div>
       </div>
@@ -204,7 +205,7 @@ svg.spark { width: 100%; height: 120px; }
         <span class="muted" id="f-count"></span>
       </div>
       <div class="tablewrap"><table id="tbl"><thead><tr>
-        <th data-k="cat">Finding</th><th data-k="t">Listing</th><th data-k="h">Host</th><th data-k="reg">Number on listing</th><th data-k="cs">City status</th><th data-k="pt">Type</th><th data-k="ca">City address</th><th data-k="own">Owner of record</th><th data-k="nm">Nearest permit (m)</th><th data-k="g">Guests</th>
+        <th data-k="cat">Finding</th><th data-k="t">Listing</th><th data-k="h">Host</th><th data-k="reg">Number on listing</th><th data-k="cs">City status</th><th data-k="pt">Type</th><th data-k="ca">City address</th><th data-k="own">Owner of record</th><th data-k="nm">Nearest permit (m)</th><th data-k="_age">Operating since</th><th data-k="g">Guests</th>
       </tr></thead><tbody id="tbody"></tbody></table></div>
       <div class="pager"><button class="btn small" onclick="page--;renderTable(true)">‹ Prev</button><span id="pageinfo"></span><button class="btn small" onclick="page++;renderTable(true)">Next ›</button></div>
     </section>
@@ -352,7 +353,7 @@ const pill = c => `<span class="pill ${tone(c)}">${esc(LABEL[c] || c)}</span>`;
 let S = null, PROB = [], INDEX = [], byId = {}, filtered = [], page = 0, sortK = 'cat', sortD = 1, map = null, mapReady = false, corrections = [], charts = {}, spotTimer = null;
 const extra = {};  // chart-driven filters: g8, nmMin, nmMax, expYear, ptype, host
 function setExtra(o) { Object.assign(extra, o); for (const k in extra) if (extra[k] == null || extra[k] === '' || extra[k] === false) delete extra[k]; renderTable(); }
-function renderExtra() { const L = { g8: 'more than 8 guests', nmMin: 'nearest permit ≥ ' + extra.nmMin + ' m', nmMax: 'nearest permit < ' + extra.nmMax + ' m', expYear: 'expired in ' + extra.expYear, ptype: 'type: ' + extra.ptype, host: 'host: ' + extra.host, bldg: BLDG_L[extra.bldg] }; $('f-extra').innerHTML = Object.keys(extra).map(k => `<span class="chip" onclick="setExtra({${k}:null})" title="remove">${esc(L[k])} ✕</span>`).join(''); }
+function renderExtra() { const L = { g8: 'more than 8 guests', nmMin: 'nearest permit ≥ ' + extra.nmMin + ' m', nmMax: 'nearest permit < ' + extra.nmMax + ' m', expYear: 'expired in ' + extra.expYear, ptype: 'type: ' + extra.ptype, host: 'host: ' + extra.host, bldg: BLDG_L[extra.bldg], age: 'operating: ' + extra.age }; $('f-extra').innerHTML = Object.keys(extra).map(k => `<span class="chip" onclick="setExtra({${k}:null})" title="remove">${esc(L[k])} ✕</span>`).join(''); }
 const isProb = x => PROB.includes(x.cat);
 // permit-type display: the old CD-STR program reads better as "pre-2023"; a World Cup number CompassKC could not resolve (typo'd prefix) is still a Major Event number
 const PT_LEGACY = 'Pre-2023 registration (CD-STR, all expired)', PT_WC = 'Major Event (World Cup)';
@@ -471,6 +472,9 @@ function buildCharts() {
   // 9 airbnb property type
   const at = {}; for (const x of L) { const k = x.at || 'unknown'; const z = at[k] = at[k] || { p: 0, n: 0 }; z.n++; if (isProb(x)) z.p++; }
   const ats = Object.entries(at).filter(([k]) => k !== 'unknown').sort((a, b) => b[1].n - a[1].n).slice(0, 10);
+  const ab = {}; for (const x of S.listings) { const k = ageBand(x); (ab[k] = ab[k] || { n: 0, p: 0 }); ab[k].n++; if (isProb(x)) ab[k].p++; }
+  const abl = AGE_BANDS.filter(k => ab[k]);
+  mkChart('c-age', { type: 'bar', data: { labels: abl, datasets: [{ label: 'Problems', data: abl.map(k => ab[k].p), backgroundColor: C_RED }, { label: 'Other', data: abl.map(k => ab[k].n - ab[k].p), backgroundColor: C_GREY }] }, options: { scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } } }, (i, d) => { resetFilters(); setExtra({ age: abl[i] }); if (d === 0) $('f-prob').checked = true; showView('listings'); renderTable(); });
   if (ats.length) mkChart('c-ptype', { type: 'bar', data: { labels: ats.map(a => a[0]), datasets: [{ label: 'Problems', data: ats.map(a => a[1].p), backgroundColor: C_RED }, { label: 'Other', data: ats.map(a => a[1].n - a[1].p), backgroundColor: C_GREY }] }, options: { indexAxis: 'y', scales: { x: { stacked: true }, y: { stacked: true, ticks: { font: { size: 10 } } } }, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } } }, (i, d) => { resetFilters(); setExtra({ ptype: ats[i][0] }); if (d === 0) $('f-prob').checked = true; showView('listings'); renderTable(); });
   else $('c-ptype').parentElement.hidden = true;
 }
@@ -494,13 +498,13 @@ function applyFilters() {
   const q = $('f-q').value.trim().toLowerCase(), cat = $('f-cat').value, pt = $('f-pt').value, prob = $('f-prob').checked, strong = $('f-strong').checked, wc = $('f-wc').checked, uf = $('f-uf').checked, zip = $('f-zip').value, off = $('f-off').checked;
   renderExtra();
   filtered = S.listings.filter(x => (!cat || x.cat === cat) && (!pt || x.pt === pt) && (!prob || isProb(x)) && (!strong || x.st) && (!wc || x.wc) && (!uf || x.uf) && (!zip || x.zip === zip) && (!off || (STATUS[x.id] && STATUS[x.id].state === 'gone')) &&
-    (!extra.g8 || (x.g || 0) > 8) && (extra.nmMin == null || (x.nm || 0) >= extra.nmMin) && (extra.nmMax == null || (x.nm || 0) < extra.nmMax) && (!extra.expYear || (x.ex || '').startsWith(extra.expYear)) && (!extra.ptype || (x.at || '') === extra.ptype) && (!extra.host || x.hid === extra.host) && (!extra.bldg || bldgBand(x) === extra.bldg) &&
+    (!extra.g8 || (x.g || 0) > 8) && (extra.nmMin == null || (x.nm || 0) >= extra.nmMin) && (extra.nmMax == null || (x.nm || 0) < extra.nmMax) && (!extra.expYear || (x.ex || '').startsWith(extra.expYear)) && (!extra.ptype || (x.at || '') === extra.ptype) && (!extra.host || x.hid === extra.host) && (!extra.bldg || bldgBand(x) === extra.bldg) && (!extra.age || ageBand(x) === extra.age) &&
     (!q || [x.t, x.h, x.hid, x.reg, x.ca, x.own, x.mail, x.id].some(v => String(v || '').toLowerCase().includes(q))));
-  filtered.sort((a, b) => { let va = a[sortK], vb = b[sortK]; if (sortK === 'cat') { va = SEV[va]; vb = SEV[vb]; } if (va == null) return 1; if (vb == null) return -1; return (va < vb ? -1 : va > vb ? 1 : 0) * sortD || (a.h || '').localeCompare(b.h || ''); });
+  filtered.sort((a, b) => { let va = a[sortK], vb = b[sortK]; if (sortK === 'cat') { va = SEV[va]; vb = SEV[vb]; } if (sortK === '_age') { va = frOf(a) || null; vb = frOf(b) || null; } if (va == null) return 1; if (vb == null) return -1; return (va < vb ? -1 : va > vb ? 1 : 0) * sortD || (a.h || '').localeCompare(b.h || ''); });
 }
 const UNITCATS = new Set(['One registration, multiple units', 'Exceeds building density limit']);
 const groupMode = () => $('f-uf').checked || UNITCATS.has($('f-cat').value);
-const rowHtml = (x, cls) => `<tr class="click ${cls || ''}" onclick="openListing('${x.id}')"><td>${pill(x.cat)}${x.st ? ' <span class="pill red">confirmed</span>' : ''}${x.uf && !UNITCATS.has(x.cat) ? ' <span class="pill red" title="'+esc(x.ufd)+'">units</span>' : ''}${stChip(x.id)}</td><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${esc(x.reg || '(none)')}</td><td>${esc(x.cs)}</td><td>${esc(x.pt)}</td><td>${esc(x.ca)}</td><td>${esc(x.own)}</td><td>${x.nm ?? ''}</td><td>${x.g ?? ''}</td></tr>`;
+const rowHtml = (x, cls) => `<tr class="click ${cls || ''}" onclick="openListing('${x.id}')"><td>${pill(x.cat)}${x.st ? ' <span class="pill red">confirmed</span>' : ''}${x.uf && !UNITCATS.has(x.cat) ? ' <span class="pill red" title="'+esc(x.ufd)+'">units</span>' : ''}${stChip(x.id)}</td><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${esc(x.reg || '(none)')}</td><td>${esc(x.cs)}</td><td>${esc(x.pt)}</td><td>${esc(x.ca)}</td><td>${esc(x.own)}</td><td>${x.nm ?? ''}</td><td title="first review ${esc(frOf(x))}">${frOf(x) ? esc(frOf(x).slice(0,7)) + ' · ' + esc(ageLabel(x)) : (rcOf(x) === 0 ? '<span class="muted">no reviews</span>' : '')}</td><td>${x.g ?? ''}</td></tr>`;
 function renderTable(keepPage) {
   applyFilters(); if (!keepPage) page = 0;
   if (groupMode()) {
@@ -514,7 +518,7 @@ function renderTable(keepPage) {
       const x0 = xs[0]; const bldg = k.startsWith('BLDG|');
       const head = bldg ? `${esc(x0.ca.split('#')[0].trim())} <span class="muted">building over the density limit · ${xs.length} listing${xs.length > 1 ? 's' : ''} here</span>`
         : `${esc(x0.reg || '(none)')} <span class="muted">${esc(x0.h)} · ${esc((x0.ca || '').split('#')[0].trim() || 'address not on file')} · ${xs.length} listings on this number</span>`;
-      return `<tr class="grp"><td colspan="10">${head}</td></tr>` + xs.sort((a, b) => (a.t || '').localeCompare(b.t || '')).map(x => rowHtml(x, 'grp-item')).join('');
+      return `<tr class="grp"><td colspan="11">${head}</td></tr>` + xs.sort((a, b) => (a.t || '').localeCompare(b.t || '')).map(x => rowHtml(x, 'grp-item')).join('');
     }).join('');
     return;
   }
@@ -549,7 +553,7 @@ function openListing(id) {
   const my = corrections.filter(c => c.id === id);
   $('drawer-body').innerHTML = `<h2>${esc(x.t)}</h2>${pill(x.cat)} ${x.st ? '<span class="pill red" title="No valid permit for the property or within 200 m">confirmed unpermitted</span>' : ''} ${x.wc ? '<span class="pill amber">World Cup</span>' : ''}
   <p><a href="https://www.airbnb.com/rooms/${x.id}" target="_blank" rel="noopener">Open on Airbnb</a> · <a href="https://www.airbnb.com/users/profile/${esc(x.hid)}" target="_blank" rel="noopener">Host profile</a>${fp ? ` · <a href="${COMPASS(fp)}" target="_blank" rel="noopener">CompassKC</a>` : ''}${x.cp ? ` · <a href="${PARCEL(x.cp)}" target="_blank" rel="noopener">Parcel Viewer</a>` : ''}</p>
-  <dl><dt>Host</dt><dd>${esc(x.h)} <span class="muted">${esc(x.hid)}</span></dd><dt>Number on listing</dt><dd>${esc(x.reg || '(none)')}</dd><dt>City status</dt><dd>${esc(x.cs || '-')}${x.ex ? ' · expires ' + esc(x.ex) : ''}</dd><dt>Renewal on file</dt><dd>${esc(x.rn || '-')}</dd><dt>City permit type</dt><dd>${esc(x.pt || '-')}</dd><dt>City address</dt><dd>${esc(x.ca || '-')}</dd><dt>City parcel</dt><dd>${esc(x.cp || '-')}</dd><dt>Active permit on parcel</dt><dd>${esc(x.pa || 'none')}</dd><dt>Permit parcel distance</dt><dd>${x.pd != null ? x.pd.toLocaleString() + ' m' : '-'}</dd><dt>Nearest active permit</dt><dd>${x.nm != null ? x.nm.toLocaleString() + ' m' : '-'}</dd><dt>Owner of record</dt><dd>${esc(x.own || '-')}</dd><dt>Owner mailing</dt><dd>${esc(x.mail || '-')}</dd><dt>Guests</dt><dd>${x.g ?? '-'}</dd>${x.uf ? `<dt>Unit / density flag</dt><dd><b>${esc(x.uf)}</b>. ${esc(x.ufd)}</dd>` : ''}${x.note ? `<dt>Note</dt><dd>${esc(x.note)}</dd>` : ''}</dl>
+  <dl><dt>Host</dt><dd>${esc(x.h)} <span class="muted">${esc(x.hid)}</span></dd><dt>Number on listing</dt><dd>${esc(x.reg || '(none)')}</dd><dt>City status</dt><dd>${esc(x.cs || '-')}${x.ex ? ' · expires ' + esc(x.ex) : ''}</dd><dt>Renewal on file</dt><dd>${esc(x.rn || '-')}</dd><dt>City permit type</dt><dd>${esc(x.pt || '-')}</dd><dt>City address</dt><dd>${esc(x.ca || '-')}</dd><dt>City parcel</dt><dd>${esc(x.cp || '-')}</dd><dt>Active permit on parcel</dt><dd>${esc(x.pa || 'none')}</dd><dt>Permit parcel distance</dt><dd>${x.pd != null ? x.pd.toLocaleString() + ' m' : '-'}</dd><dt>Nearest active permit</dt><dd>${x.nm != null ? x.nm.toLocaleString() + ' m' : '-'}</dd><dt>Owner of record</dt><dd>${esc(x.own || '-')}</dd><dt>Owner mailing</dt><dd>${esc(x.mail || '-')}</dd><dt>Guests</dt><dd>${x.g ?? '-'}</dd><dt>Operating since</dt><dd>${frOf(x) ? `<b>${esc(ageLabel(x))}</b> on Airbnb · first review ${esc(frOf(x))}${rcOf(x) != null ? ' · ' + rcOf(x) + ' reviews' : ''}${lrOf(x) ? ', latest ' + esc(lrOf(x)) : ''}${stOf(x.id) && stOf(x.id).rating ? ' · ' + stOf(x.id).rating + '★' : ''}` : (rcOf(x) === 0 ? 'no reviews yet (new, or never booked)' : 'not read yet')}${stOf(x.id) && stOf(x.id).hostYears ? ` · host account ${stOf(x.id).hostYears} year${stOf(x.id).hostYears === 1 ? '' : 's'} on Airbnb` : ''}</dd>${x.uf ? `<dt>Unit / density flag</dt><dd><b>${esc(x.uf)}</b>. ${esc(x.ufd)}</dd>` : ''}${x.note ? `<dt>Note</dt><dd>${esc(x.note)}</dd>` : ''}</dl>
   ${drawerStatusHtml(String(x.id))}
   <div class="card"><h2>Log a correction</h2><select id="c-kind"><option value="fixed">Host fixed the listing</option><option value="hotel">This is a hotel</option><option value="midterm">Mid-term only, no permit needed</option><option value="wrong">Our finding is wrong</option><option value="other">Other</option></select>
   <textarea id="c-note" placeholder="What did you verify, and where?"></textarea><button class="btn primary" onclick="logCorrection('${x.id}')">Log</button>
@@ -589,6 +593,13 @@ const EK = { letter: ['City letter', 'amber'], takedown: ['Taken down', 'red'], 
 const CITY_K = new Set(['letter', 'takedown', 'citation', 'complaint', 'permit_denied', 'permit_revoked', 'permit_issued', 'court', 'note', 'other']);
 const ekPill = k => { const [l, c] = EK[k] || [k, 'grey']; return `<span class="pill ${c}">${esc(l)}</span>`; };
 const stOf = id => STATUS[id] || null;
+const frOf = x => x.fr || (STATUS[x.id] && STATUS[x.id].fr) || '';
+const lrOf = x => (STATUS[x.id] && STATUS[x.id].lr) || x.lr || '';
+const rcOf = x => { const r = STATUS[x.id]; return r && r.rc != null ? r.rc : x.rc; };
+const ageMonths = x => { const f = frOf(x); return f ? Math.max(0, Math.round((Date.now() - Date.parse(f)) / 2629800000)) : null; };
+const ageLabel = x => { const m = ageMonths(x); if (m == null) return rcOf(x) === 0 ? 'no reviews yet' : 'unknown'; return m < 1 ? 'under a month' : m < 12 ? m + ' months' : (m / 12).toFixed(1).replace(/\.0$/, '') + ' years'; };
+const ageBand = x => { const m = ageMonths(x); return m == null ? (rcOf(x) === 0 ? 'no reviews' : 'unknown') : m < 6 ? '< 6 months' : m < 12 ? '6–12 months' : m < 24 ? '1–2 years' : m < 36 ? '2–3 years' : m < 60 ? '3–5 years' : '5+ years'; };
+const AGE_BANDS = ['< 6 months', '6–12 months', '1–2 years', '2–3 years', '3–5 years', '5+ years', 'no reviews', 'unknown'];
 const stChip = id => { const r = stOf(id); if (!r) return ''; if (r.state === 'gone') return ` <span class="pill grey" title="Not opening on Airbnb since ${esc(r.since || '')}">offline</span>`; if (r.suspect) return ` <span class="pill red" title="${r.cycles} offline→online cycles; came back ${esc(r.lastBack || '')}">reopened</span>`; return ''; };
 const fmtD = s => s ? String(s).slice(0, 10) : '';
 async function loadStatus() { try { const d = await api('?status=1'); STATUS = d.status || {}; delete STATUS._meta; STSUM = d.summary || {}; } catch { STATUS = {}; } try { EVENTS = (await api('?events=1')).events || []; } catch { EVENTS = []; }
