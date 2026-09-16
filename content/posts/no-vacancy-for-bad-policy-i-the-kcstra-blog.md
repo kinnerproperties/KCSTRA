@@ -2,7 +2,7 @@
 title: No Vacancy for Bad Policy I The KCSTRA Blog
 date: 2026-09-16
 author: Stacy Johnson | KCSTRA Member
-description: >+
+description: >
   Kansas City’s STR landscape is changing—and staying on the sidelines isn’t
   much of a strategy. The KCSTRA Blog is a new corner for sharing useful
   information about policy & industry insight, strong opinions, and the stories
@@ -46,4 +46,3 @@ Kansas City's STR industry has a voice.
 
 **We intend to use it.**
 
-  
