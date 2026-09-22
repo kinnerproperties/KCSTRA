@@ -79,17 +79,1209 @@
    "reason": "Airbnb location",
    "title": "Stadium Access for Royals/Chiefs"
   },
-  "563001410477547525": {
-   "city": "Kansas City",
-   "state": "Missouri",
-   "reason": "pin in unincorporated Platte County, outside the city polygon; 28-night minimum",
-   "title": "Large 3 BR Home Near Downtown & Airport"
+  "16513065": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "3 Bdrm-2 Bath-Access to Garage-Close to Hwy - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
   },
-  "1644360664598676405": {
-   "city": "Kansas City",
+  "23206492": {
+   "city": "Olathe",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Luxury Guest House Retreat - Guesthouses for Rent in Olathe, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "45075456": {
+   "city": "Grandview",
    "state": "Missouri",
-   "reason": "pin in Gladstone, outside the city polygon; 30-night minimum (mid-term)",
-   "title": "Bright KC Retreat | Close to World Cup Matches"
+   "reason": "Airbnb location",
+   "title": "The Resting Place, Grandview Home-Upper Level - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "49594457": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Come to Eastern Kansas City, Close To Stadiums - Townhouses for Rent in Lee's Summit, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "52647284": {
+   "city": "Prairie Village",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Perfect in Prairie Village - Houses for Rent in Prairie Village, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "53090786": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Home Near Legends_Sleeps 8_Great Location_Shops - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1750981793694907075": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Drury Inn and Suites Kansas City Overland Park - Hotels for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1717549861934255924": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Private Suite \u2022 Sauna + Cold Plunge \u2022 Full Kitchen - Apartments for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "795796699775808853": {
+   "city": "Parkville",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "The Cozy Stay in Parkville - Houses for Rent in Parkville, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1704539796292039363": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Family-Friendly Home w/ Yard, Near Arrowhead - Houses for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1750975060121010307": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Drury Inn and Suites Kansas City Overland Park - Hotels for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1135447051485614363": {
+   "city": "Roeland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Quiet 2BR Home Near KU Med, Downtown & Plaza - Houses for Rent in Roeland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1681073500427992973": {
+   "city": "Merriam",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Hotel Lotus Kansas City Merriam - Hotels for Rent in Merriam, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1185464559153136437": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Entire Home In Overland Park - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "593367271471915246": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Home in Overland Park- big basement and office! - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1648071378883918223": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "The Grand Retreat/4BRM w/ Fire Pit Grill + 2 King - Houses for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1750981964906469426": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Drury Inn and Suites Kansas City Overland Park - Hotels for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1622722462324150255": {
+   "city": "Mission",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Large Home_5BR|Sleeps 11|Family Fav - Houses for Rent in Mission, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1674159074312604294": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Lakeshore KC, 4b2b home by trail, 6 min to stadium - Houses for Rent in Raytown, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1690132483477106643": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Perfect Family Home 4B2B - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "963029519255875709": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Centrally Located Updated Home 2King - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1641617072978107161": {
+   "city": "Leawood",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "*.*FullHouse 4Bed2.5Bath Sleeps 8 Overland Park KS - Houses for Rent in Leawood, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1688600624752803363": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Spacious 4BR Home Near KC Stadiums & Downtown - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1671127281870939564": {
+   "city": "Lenexa",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "The Cozy Lower Level in Lenexa (Girls Only) - Houses for Rent in Lenexa, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1538567776233213558": {
+   "city": "Olathe",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Modern Family Duplex Gateway by YDSH GuestMind - Apartments for Rent in Olathe, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "655130384977745761": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Full home, game rm & cool deck in KC suburb - Houses for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "779848133390060976": {
+   "city": "Fairway",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "The Fairway Cottage - Houses for Rent in Fairway, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1401584465476657949": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Remodeled 3BR \u2022 Raymore/Belton \u2022 Fast WiFi - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1701416167936403912": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Charming KC retreat-2BR near KU Med - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "610333068363917627": {
+   "city": "Gladstone",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Great Home_Near MCI & GEHA Stadium_3 BR|King Beds - Houses for Rent in Gladstone, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1385407897078053823": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Blessing Bay 4BR Home | Sleeps 8 | South KC - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1761118056439386758": {
+   "city": "Lenexa",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Spacious Home_Sleeps 10_KingBeds_Arcade_Parking - Houses for Rent in Lenexa, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1306743925773898768": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Stay & Relax|4 BR home|Private Parking+Pool Table - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1305632558625774744": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Guesthouse 3BR Suite \u2022 Walkable, Clean, & Spacious - Guest suites for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1431972436125806703": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Minutes to Plaza & Downtown KC: 4BR/2BA + Garage - Apartments for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1677806672138331833": {
+   "city": "Parkville",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Cozy 3-bedroom home in quiet KC neighborhood - Houses for Rent in Parkville, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "802256588641612399": {
+   "city": "Prairie Village",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Prairie Village Retreat | Fireplace! + Game Room! - Houses for Rent in Prairie Village, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1596766045948543895": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "4BR All King-Quiet home in Overland Park - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1595162246750018534": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Cozy Comfort Suite: 4 bdrm sleeps 12 - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "887522533203846142": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Euro 3King-Modern4Bdrm, Sleeps12-5 private spaces - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1640979785412161035": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "2nd Lounge + Coffee Bar | 20 Min to Kansas City - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1234254604552881045": {
+   "city": "Mission",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Mission-Kansas City Entire Home \u2014 Wonderful Space! - Houses for Rent in Mission, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1614762483403456050": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Large Home_2 Living Rooms_Sleeps 14_7 KingBeds - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1626526050910184741": {
+   "city": "Parkville",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Valley View Home in the heart of Parkville, MO - Houses for Rent in Parkville, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1750981660394271743": {
+   "city": "Blue Springs",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Drury Inn and Suites Kansas City Independence - Hotels for Rent in Blue Springs, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1690797758530471182": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Home Away From Home_Sleeps 6_Prime Location - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1008615813011723118": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Rock \u2018n\u2019 Roll bungalow - Houses for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "817507150028636138": {
+   "city": "Liberty",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Liberty KC Stay |Fast Wi-Fi \u2022 Family-Friendly - Townhouses for Rent in Liberty, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1750981660483515994": {
+   "city": "Blue Springs",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Drury Inn and Suites Kansas City Independence - Hotels for Rent in Blue Springs, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1460838954938491284": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Heartland Hideaway - Townhouses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1703935177851957618": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Midwest Comfort Stay: sleeps 15 - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1744449762319232318": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "My Place Hotel-Kansas City East/Independence, MO - Hotels for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1430545844905749379": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Spacious 4BR/2BA Retreat \u2013 Fast Wi-Fi, Model Home! - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1658865802258661938": {
+   "city": "Olathe",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Entire Ranch House | Near I-35 & Dining | Sleeps 8 - Houses for Rent in Olathe, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1168428268490699993": {
+   "city": "Raymore",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Modern Luxury+great area! Fenced yard & kids beds! - Houses for Rent in Raymore, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1603235038104392587": {
+   "city": "Olathe",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "World Cup rental, private 3 Bed/Bath outdoor space - Houses for Rent in Olathe, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1615590106393910927": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Luxury Family Estate | Resort Pool | 36-Acre Farm - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1681232645610824211": {
+   "city": "Olathe",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Group Luxury Home+Theater for World Cup-Sleeps 16 - Houses for Rent in Olathe, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1317321006179751946": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "OVP Kessler/Private Room 1 in Peaceful - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1219082865033874812": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "OVP Private Room with bath III in Modern House - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1582612744875696605": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "OVP Kessler/Private Room II in Peaceful OVP - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1389853564166711599": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "3BD 2BA Home, Fenced, Garage. - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1667310077054153393": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Located just minutes from the University of Kansas - Apartments for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1690747233827795279": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "2BR Cozy Duplex - Houses for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1213741212515835859": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "3Bedroom, 2full bath corner House near KU Hospital - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1130009832425608768": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Brookhaven Blue - Unique Vibrance - Houses for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1647270033888427238": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Quiet neighborhood, single story with parking - Houses for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1627848780008914889": {
+   "city": "Olathe",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Spacious 5 Bed|5 Bath|Community Pool |FIFA Ready! - Houses for Rent in Olathe, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1612481162142162670": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Quiet House Close to GEHA Field at Arrow Stadium - Bed and breakfasts for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1696760674000996369": {
+   "city": "Belton",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Newly renovated 3-bedroom home with country views - Houses for Rent in Belton, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1750981812476819653": {
+   "city": "Blue Springs",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Drury Inn and Suites Kansas City Independence - Hotels for Rent in Blue Springs, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1251485623582790241": {
+   "city": "Liberty",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Private Garage, 2 Kings & Pet-Friendly - Houses for Rent in Liberty, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1415191341138538446": {
+   "city": "Olathe",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Prairie Haven Retreat - Houses for Rent in Olathe, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "42509386": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Traveler's Oasis: Beautiful, Clean and Convenient - Condominiums for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "43578182": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "The Retreat 5 STAR CLEAN...CLOSE TO EVERYTHING! - Condominiums for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "53109723": {
+   "city": "Parkville",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Apartment at The Breen House - 2 Bed/1 Bath - Guest suites for Rent in Parkville, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1766881780185645949": {
+   "city": "Bonner Springs",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Newly finished 2 BDR townhome in Bonner Springs - Houses for Rent in Bonner Springs, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1627898221763677913": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "The Rockford World Cup Oasis - Houses for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1624592699570290018": {
+   "city": "Lenexa",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Spacious Lenexa Retreat, Sleeps 4, Great Location - Houses for Rent in Lenexa, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1710508017342759798": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Modern 3BR \u00b7 Walk to KU Med \u00b7 Sleeps 5 - Apartments for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1679216626919267522": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Modern Bungalow in the heart of KC - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1725425034223606948": {
+   "city": "Leawood",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Leawood Home Away From Home - Houses for Rent in Leawood, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1415211717194557245": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Landing | Modern 1BD, Gym, Pool - Apartments for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1485527590553605356": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Cozy KC Stay | King/Queen Bed! + Garage! - Apartments for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1618806801441972584": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Cozy Kansas City Getaway | Updated 2BR Bungalow - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1365349832317386840": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Private RM w/ Private Full Bathroom Co-Living - Houses for Rent in Lee's Summit, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1760276779964564751": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Spacious 2BR Stay Near Kansas City | Independence - Apartments for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1759554691939017351": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Family-Friendly Rental Near Kansas City | Sleeps 4 - Apartments for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1760262000149388285": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Cozy 2BR Home in Independence | Near Kansas City - Apartments for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1509704684663126563": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Cozy home in the Englewood Art District - Houses for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1578302031262634209": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Shawnee cozy home - Guest suites for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1355852201030384389": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Comfy Studio 1Bed Lower Level-Private Access - Guest suites for Rent in Lee's Summit, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "728206626331603982": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "KContemporary Townhouse - Townhouses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1184874970501688752": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Half Acre Cottage in the Woods - Houses for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "785648518892149887": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Clean,cozy room w/private bath/quiet neighborhood - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1622761818875258213": {
+   "city": "Prairie Village",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Home away from home in Prairie Village - Houses for Rent in Prairie Village, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1477852126120982264": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Spacious KC home, fenced yard, pets welcome - Houses for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1365379149450624692": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Lovely Modern Home Private Access - Houses for Rent in Lee's Summit, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1365332709614930529": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Beautiful Spacious Home - Houses for Rent in Lee's Summit, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "744870707566722199": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Perfect Arrangement for World Cup Group! - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1643780770468637506": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Modern Farmhouse | Coffee Bar + Sun Room | Sleep 8 - Houses for Rent in Lee's Summit, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1712405406956033018": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Cozy 3 bedroom home in Downtown Lee's Summit - Houses for Rent in Lee's Summit, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1663270434625924029": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Private Cul-de-Sac Home near Downtown Lee\u2019s Summit - Houses for Rent in Lee's Summit, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1652999190096373783": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "10K SF KC Estate | Sport Court, Pool & Group Stay - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1407359518886402166": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "OVP Mastin/Quiet Room I in Overland Park - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "3710144": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Comfy room with lots more space! - Houses for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "840835451143380508": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Great home in Kansas City - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "844853588947139018": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Beautiful Home in Kansas City - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "18949929": {
+   "city": "Olathe",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Entire house 3000+ sqf 0.5 acre fenced yard - Houses for Rent in Olathe, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1711841547167724525": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Bungalow Cottage for 7 - Houses for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1562632894149320664": {
+   "city": "Olathe",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Cozy two bedroom home near Downtown Olathe - Houses for Rent in Olathe, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "32977495": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Charming Suburban Condo - Condominiums for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "36836341": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "The Cottage in Kansas City - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1582863017648357338": {
+   "city": "Westwood",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Cozy Scandi Carriage House w/ Garage Parking - Guesthouses for Rent in Westwood, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1408180422945185900": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Spacious Beach Styled Oasis - 3BR/2BA Pet-Friendly - Townhouses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "791389178427133527": {
+   "city": "Parkville",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Welcome Home to Fox Haven - Houses for Rent in Parkville, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "712506131253668220": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Comfortable & Updated 3BR*Perfect for Relocation - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "559478564036831342": {
+   "city": "Mission",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Cozy KC Suburb Home, Sleeps8_ PoolTable_ Foosbal - Houses for Rent in Mission, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "873882846422192372": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Affordable 1 Bed Apt Close to KUMed/School #12 - Apartments for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1671852756328122595": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Quiet Mid-Term Retreat & Super Convenient Location - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1506110658247246472": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Work, Play, Live: Discover Our Wonderful Space - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1483615491612152041": {
+   "city": "Liberty",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "3BR Group Stay Near KC World Cup & Arrowhead - Houses for Rent in Liberty, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "718327224709149625": {
+   "city": "Lee's Summit",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Beautiful Lake View! Spacious3/2 Monthly Special! - Houses for Rent in Lee's Summit, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "894258032269295037": {
+   "city": "Blue Springs",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Blue Safari Basement Lodge - Apartments for Rent in Blue Springs, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1681073500560534918": {
+   "city": "Merriam",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Hotel Lotus Kansas City Merriam - Hotels for Rent in Merriam, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "45283540": {
+   "city": "Shawnee",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "3 bdrm-2 bath-Close to Advent Hosp & Hwy Access - Houses for Rent in Shawnee, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1453771489521547504": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "KC Gem 1Bdrm Basement Apartment - Apartments for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1453765774338865975": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Elegant KC Escape SpaBath- LuxYard-Firepit- Garage - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1506558730346014432": {
+   "city": "Grandview",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Wooded Upstairs KC Escape, Cul-de-Sac, Sleeps 4 - Houses for Rent in Grandview, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1630499711639277761": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Hot Tub at The Eby Family Lodge - Houses for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1750975060039362216": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Drury Inn and Suites Kansas City Overland Park - Hotels for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "5704614": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Garden Carriage House - Cottages for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1744449762412256641": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "My Place Hotel-Kansas City East/Independence, MO - Hotels for Rent in Independence, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1576895209954833837": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Beach Oasis | 4BR | Sleeps 12 | Mins to Arrowhead - Houses for Rent in Raytown, Missouri, United States",
+   "added": "2026-09-22"
+  },
+  "1750975059610293391": {
+   "city": "Overland Park",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Drury Inn and Suites Kansas City Overland Park - Hotels for Rent in Overland Park, Kansas, United States",
+   "added": "2026-09-22"
+  },
+  "1695044546980750089": {
+   "city": "Gladstone",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Finished Basement Retreat + Stunning Bath",
+   "added": "2026-09-22"
+  },
+  "1660277938403325946": {
+   "city": "Gladstone",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "FIFA World Cup | 5BD KC Home | Gym, Sleeps 13",
+   "added": "2026-09-22"
+  },
+  "1537211806331460985": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Trailside KC- Walk the Trail to Arrowhead/FIFA",
+   "added": "2026-09-22"
+  },
+  "13160452": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "KU Med/Westport/Plaza - Shared Loft - Double Bed",
+   "added": "2026-09-22"
+  },
+  "1679136699471679243": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Beautiful newly renovated 3 bedroom 1 1/2 bath.",
+   "added": "2026-09-22"
+  },
+  "1704457119031576175": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Sleeps8! Remodeled w/ Smart TVs , Near KC Stadium",
+   "added": "2026-09-22"
+  },
+  "1710298245614498857": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "TownHome w/ Smart TVs, Near KC Stadium Sleeps 6",
+   "added": "2026-09-22"
+  },
+  "1634538456663466926": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Modern family home 5 min from Geha stadium",
+   "added": "2026-09-22"
+  },
+  "12341631": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "KU Med/Westport/Plaza - BSMT DBL Bed (Room #5)",
+   "added": "2026-09-22"
+  },
+  "1627133651578538220": {
+   "city": "Houston Lake",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Peaceful KC Getaway \u2022 Cozy 3BR Near the Lake",
+   "added": "2026-09-22"
+  },
+  "1670359834229777084": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Bright and Chic Studio",
+   "added": "2026-09-22"
+  },
+  "31761814": {
+   "city": "Platte Woods",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "North Shore Cottage",
+   "added": "2026-09-22"
+  },
+  "1623640446875460395": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Charming Townhome Retreat in KC",
+   "added": "2026-09-22"
+  },
+  "800731917821482822": {
+   "city": "Birmingham",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Sunset House-Near Worlds Of Fun and downtown",
+   "added": "2026-09-22"
+  },
+  "1152139839127981767": {
+   "city": "Riverside",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Chic Family-Friendly Home in Riverside: 7 Mi to KC",
+   "added": "2026-09-22"
+  },
+  "1700840748602873710": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Vibrant KC Home | Westport Plaza & Highway Access",
+   "added": "2026-09-22"
+  },
+  "40217773": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Room #2 - Westport/Plaza - near Hospitals",
+   "added": "2026-09-22"
+  },
+  "1272447343772463495": {
+   "city": "Pleasant Valley",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Large 4BR Home, Garage \u2013 Short & Long Stay",
+   "added": "2026-09-22"
+  },
+  "13158010": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "KU Med/Westport/Plaza - Queen  Bed (Room #2)",
+   "added": "2026-09-22"
+  },
+  "54266899": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Modern&Walkable-West Plaza/KUMed-WC 2026 Friendly",
+   "added": "2026-09-22"
+  },
+  "1642901233308957709": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "World Cup KC - 5BR House Near Westport & Downtown",
+   "added": "2026-09-22"
+  },
+  "1669901486039448123": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Modern 3BR | Sleeps 9 | Mins to Arrowhead & KC",
+   "added": "2026-09-22"
+  },
+  "36086506": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Room #3 - Westport/Plaza - near Hospitals",
+   "added": "2026-09-22"
+  },
+  "13160137": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "KU Med/Westport/Plaza - Shared Loft - Twin Bed",
+   "added": "2026-09-22"
+  },
+  "736476253743907427": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "The Bungalow on Brookside",
+   "added": "2026-09-22"
+  },
+  "1618414744929061265": {
+   "city": "Houston Lake",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "World Cup Headquarters",
+   "added": "2026-09-22"
+  },
+  "1720420486341888322": {
+   "city": "Avondale",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Ranch Style Home_Easy Access to HWY_Sleeps 6",
+   "added": "2026-09-22"
+  },
+  "12084001": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "KU Med/Westport/Plaza - Double Bed (Room #1)",
+   "added": "2026-09-22"
+  },
+  "1684243928584490177": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "Linea | Luxury Stay Near Plaza & KU Med",
+   "added": "2026-09-22"
+  },
+  "1295331691988118970": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Renovated House - 5 MIN from World Cup & Chiefs!",
+   "added": "2026-09-22"
+  },
+  "50867567": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Trailview, Walk to stadium, Pet-friendly, 1 acre",
+   "added": "2026-09-22"
+  },
+  "1615324221132207808": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Birdhouse KC - 6 Mins to Stadium, peaceful 3B/2B",
+   "added": "2026-09-22"
+  },
+  "54222360": {
+   "city": "Riverside",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Quiet 2BR Near Downtown KC | Free Parking",
+   "added": "2026-09-22"
+  },
+  "1277064958446274017": {
+   "city": "Parkville",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Cozy Bluegrass Cottage",
+   "added": "2026-09-22"
+  },
+  "54353420": {
+   "city": "Platte Woods",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Private Retreat 7BR |5 King Beds|HotTub|GameRoom",
+   "added": "2026-09-22"
+  },
+  "1644366228376283751": {
+   "city": "Raytown",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "0.5 mi to Stadium | Near Downtown",
+   "added": "2026-09-22"
+  },
+  "737653278946746246": {
+   "city": "Independence",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "Amazing 3BR Home for Families|Close to Stadiums",
+   "added": "2026-09-22"
   }
  }
 }
