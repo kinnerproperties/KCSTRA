@@ -132,7 +132,7 @@
    "city": "Overland Park",
    "state": "Kansas",
    "reason": "Airbnb location",
-   "title": "Private Suite \u2022 Sauna + Cold Plunge \u2022 Full Kitchen - Apartments for Rent in Overland Park, Kansas, United States",
+   "title": "Private Suite • Sauna + Cold Plunge • Full Kitchen - Apartments for Rent in Overland Park, Kansas, United States",
    "added": "2026-09-22"
   },
   "795796699775808853": {
@@ -272,7 +272,7 @@
    "city": "Grandview",
    "state": "Missouri",
    "reason": "Airbnb location",
-   "title": "Remodeled 3BR \u2022 Raymore/Belton \u2022 Fast WiFi - Houses for Rent in Grandview, Missouri, United States",
+   "title": "Remodeled 3BR • Raymore/Belton • Fast WiFi - Houses for Rent in Grandview, Missouri, United States",
    "added": "2026-09-22"
   },
   "1701416167936403912": {
@@ -314,7 +314,7 @@
    "city": "Overland Park",
    "state": "Kansas",
    "reason": "Airbnb location",
-   "title": "Guesthouse 3BR Suite \u2022 Walkable, Clean, & Spacious - Guest suites for Rent in Overland Park, Kansas, United States",
+   "title": "Guesthouse 3BR Suite • Walkable, Clean, & Spacious - Guest suites for Rent in Overland Park, Kansas, United States",
    "added": "2026-09-22"
   },
   "1431972436125806703": {
@@ -370,7 +370,7 @@
    "city": "Mission",
    "state": "Kansas",
    "reason": "Airbnb location",
-   "title": "Mission-Kansas City Entire Home \u2014 Wonderful Space! - Houses for Rent in Mission, Kansas, United States",
+   "title": "Mission-Kansas City Entire Home — Wonderful Space! - Houses for Rent in Mission, Kansas, United States",
    "added": "2026-09-22"
   },
   "1614762483403456050": {
@@ -405,14 +405,14 @@
    "city": "Independence",
    "state": "Missouri",
    "reason": "Airbnb location",
-   "title": "Rock \u2018n\u2019 Roll bungalow - Houses for Rent in Independence, Missouri, United States",
+   "title": "Rock ‘n’ Roll bungalow - Houses for Rent in Independence, Missouri, United States",
    "added": "2026-09-22"
   },
   "817507150028636138": {
    "city": "Liberty",
    "state": "Missouri",
    "reason": "Airbnb location",
-   "title": "Liberty KC Stay |Fast Wi-Fi \u2022 Family-Friendly - Townhouses for Rent in Liberty, Missouri, United States",
+   "title": "Liberty KC Stay |Fast Wi-Fi • Family-Friendly - Townhouses for Rent in Liberty, Missouri, United States",
    "added": "2026-09-22"
   },
   "1750981660483515994": {
@@ -447,7 +447,7 @@
    "city": "Grandview",
    "state": "Missouri",
    "reason": "Airbnb location",
-   "title": "Spacious 4BR/2BA Retreat \u2013 Fast Wi-Fi, Model Home! - Houses for Rent in Grandview, Missouri, United States",
+   "title": "Spacious 4BR/2BA Retreat – Fast Wi-Fi, Model Home! - Houses for Rent in Grandview, Missouri, United States",
    "added": "2026-09-22"
   },
   "1658865802258661938": {
@@ -636,7 +636,7 @@
    "city": "Kansas City",
    "state": "Kansas",
    "reason": "Airbnb location",
-   "title": "Modern 3BR \u00b7 Walk to KU Med \u00b7 Sleeps 5 - Apartments for Rent in Kansas City, Kansas, United States",
+   "title": "Modern 3BR · Walk to KU Med · Sleeps 5 - Apartments for Rent in Kansas City, Kansas, United States",
    "added": "2026-09-22"
   },
   "1679216626919267522": {
@@ -797,7 +797,7 @@
    "city": "Lee's Summit",
    "state": "Missouri",
    "reason": "Airbnb location",
-   "title": "Private Cul-de-Sac Home near Downtown Lee\u2019s Summit - Houses for Rent in Lee's Summit, Missouri, United States",
+   "title": "Private Cul-de-Sac Home near Downtown Lee’s Summit - Houses for Rent in Lee's Summit, Missouri, United States",
    "added": "2026-09-22"
   },
   "1652999190096373783": {
@@ -1091,7 +1091,7 @@
    "city": "Houston Lake",
    "state": "Missouri",
    "reason": "Airbnb location",
-   "title": "Peaceful KC Getaway \u2022 Cozy 3BR Near the Lake",
+   "title": "Peaceful KC Getaway • Cozy 3BR Near the Lake",
    "added": "2026-09-22"
   },
   "1670359834229777084": {
@@ -1147,7 +1147,7 @@
    "city": "Pleasant Valley",
    "state": "Missouri",
    "reason": "Airbnb location",
-   "title": "Large 4BR Home, Garage \u2013 Short & Long Stay",
+   "title": "Large 4BR Home, Garage – Short & Long Stay",
    "added": "2026-09-22"
   },
   "13158010": {
@@ -1282,6 +1282,20 @@
    "reason": "Airbnb location",
    "title": "Amazing 3BR Home for Families|Close to Stadiums",
    "added": "2026-09-22"
+  },
+  "1729622806156122786": {
+   "city": "Kansas City",
+   "state": "Kansas",
+   "reason": "Airbnb location",
+   "title": "3 Bedrooms | Cozy porch | Peaceful - Houses for Rent in Kansas City, Kansas, United States",
+   "added": "2026-09-24"
+  },
+  "1632860794253494129": {
+   "city": "Riverside",
+   "state": "Missouri",
+   "reason": "Airbnb location",
+   "title": "World Cup Stay Near KC – Riverside Retreat - Houses for Rent in Riverside, Missouri, United States",
+   "added": "2026-09-24"
   }
  }
 }
