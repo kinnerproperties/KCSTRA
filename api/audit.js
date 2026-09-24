@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     if (b.action === 'event') {
       const kind = String(b.kind || 'other').slice(0, 40); if (!EVENT_KINDS.has(kind)) return res.status(400).json({ error: 'bad kind' });
       const entry = { ts: new Date().toISOString(), kind, id: String(b.id || '').replace(/\D/g, ''), title: String(b.title || '').slice(0, 200), reg: String(b.reg || '').slice(0, 40), address: String(b.address || '').slice(0, 160),
-        date: /^\d{4}-\d{2}-\d{2}$/.test(String(b.date || '')) ? b.date : new Date().toISOString().slice(0, 10), note: String(b.note || '').slice(0, 2000), source: String(b.source || '').slice(0, 80), link: String(b.link || '').slice(0, 500), by: user, manual: true };
+        date: /^\d{4}-\d{2}-\d{2}$/.test(String(b.date || '')) ? b.date : new Date().toISOString().slice(0, 10), note: String(b.note || '').slice(0, 2000), source: String(b.source || '').slice(0, 80), link: /^https?:\/\//i.test(String(b.link || '').trim()) ? String(b.link).trim().slice(0, 500) : '', by: user, manual: true };   // http(s) only: links render as hrefs for every member and in the admin copy
       if (!entry.id && !entry.reg && !entry.address && !entry.note) return res.status(400).json({ error: 'listing, permit number, address or note required' });
       const ev = (await kvGet(EVENTS_KEY)) || []; ev.unshift(entry); await kvSet(EVENTS_KEY, ev.slice(0, 3000));
       return res.json({ ok: true, entry });
