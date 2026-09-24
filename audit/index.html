@@ -589,7 +589,8 @@ async function setCorr(ts, status) { await api('', { method: 'POST', body: JSON.
 /* ---------- listing status + enforcement log ---------- */
 let STATUS = {}, EVENTS = [], STSUM = {};
 const EK = { letter: ['City letter', 'amber'], takedown: ['Taken down', 'red'], citation: ['Citation', 'red'], complaint: ['Complaint', 'amber'], permit_denied: ['Permit denied', 'red'], permit_revoked: ['Permit revoked', 'red'], permit_issued: ['Permit issued', 'green'], court: ['Court', 'red'], note: ['Note', 'grey'], other: ['Other', 'grey'],
-  went_offline: ['Went offline', 'grey'], came_back: ['Came back', 'amber'], permit_lapsed: ['Permit lapsed', 'amber'], permit_new: ['New permit', 'green'], finding_changed: ['Finding changed', 'blue'], listing_dropped: ['Left the audit', 'grey'], listing_new: ['New listing', 'blue'] };
+  went_offline: ['Went offline', 'grey'], came_back: ['Came back', 'amber'], permit_lapsed: ['Permit lapsed', 'amber'], permit_new: ['New permit', 'green'], finding_changed: ['Finding changed', 'blue'], listing_dropped: ['Left the audit', 'grey'], listing_new: ['New listing', 'blue'],
+  reg_changed: ['Number changed', 'amber'], title_changed: ['Renamed', 'blue'], relist_suspect: ['Possible relist', 'red'] };
 const CITY_K = new Set(['letter', 'takedown', 'citation', 'complaint', 'permit_denied', 'permit_revoked', 'permit_issued', 'court', 'note', 'other']);
 const ekPill = k => { const [l, c] = EK[k] || [k, 'grey']; return `<span class="pill ${c}">${esc(l)}</span>`; };
 const stOf = id => STATUS[id] || null;
