@@ -52,3 +52,23 @@ A copy of the kinnerproperties.com admin STR Audit dashboard for board members. 
 - Env: `AUDIT_USERS` = JSON `{ "name": "<scrypt hash>" }`; `AUDIT_SESSION_SECRET` (rotate to sign everyone out); `KV_REST_API_URL` / `KV_REST_API_TOKEN` from the shared `upstash-kv-bole-drum` Marketplace resource (keys namespaced `audit:*`).
 - Activity log: every sign-in attempt → Redis `audit:logins`; the page pings `/api/audit {action:'ping', view}` once a minute while visible and on tab change → `audit:sessions` (10-minute quiet gap = new session, sign-out closes it). `?activity=1` and the Activity tab are visible only to `AUDIT_ADMINS` (comma list, default `adam`).
 - Add or reset a login: `node scripts/audit-user.js <name>` prints a password + hash; merge the entry into `AUDIT_USERS` (`vercel env rm` / `vercel env add` for production, preview, development) and redeploy. Remove the entry to revoke.
+
+## Board Finances (board-only, `/finance`) — Sep 2026
+Cash ledger for Central Bank checking (…8170) and PayPal, checked against every statement, with an Excel download. Same sign-in as `/audit`. `FINANCE_USERS` (comma list) narrows access; when it's unset, every `AUDIT_USERS` login can see it, and admins always can.
+- **The books never go in this repo** (it's public). They live in `~/Documents/KCSTRA Ledger/`:
+  - `transactions.csv` is the ledger itself.
+  - `balances.csv` holds the statement balances.
+  - `rules.json` has the categories and payee rules.
+  - `notes.json` has the open items.
+  - `ledger.py` is the tool; see `README.md` there.
+  - The source statements are in Susan's Treasurer Drive folder, copied to `~/Documents/KCSTRA Accounting/`.
+- Monthly update:
+  1. `python3 ledger.py import-central <Central statement.pdf>`.
+  2. `python3 ledger.py import-paypal <activity.CSV> --through <month end>`, plus any PayPal statement PDFs.
+  3. Fix the rows listed as Uncategorized in `transactions.csv`.
+  4. `python3 ledger.py build`. It refuses to write anything unless every month-end matches its statement, and it recomputes every workbook formula with pycel.
+- Publish:
+  1. `vercel env pull "$TMPDIR/kcstra.env" --environment=production --yes`
+  2. `node --env-file="$TMPDIR/kcstra.env" scripts/finance-publish.js ~/Documents/KCSTRA\ Ledger`, which writes Redis `kcstra-finance:xlsx` and then `kcstra-finance:ledger` (the Redis is shared with kinnerproperties.com, hence the prefix).
+  3. `rm "$TMPDIR/kcstra.env"`
+- `api/finance.js` serves both behind the cookie with `no-store`. `finance/index.html` shows cash, the open items, income and expenses, the month-end check, and the transactions (as cards on phones).
