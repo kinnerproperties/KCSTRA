@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
   const name = String(b.user || '').trim().toLowerCase(), pw = String(b.pw || '');
   const stored = users()[name];
-  if (!name || !pw || !stored || !checkPassword(pw, stored)) { if (name) await logLogin(name, req, false); return res.status(401).json({ error: 'Wrong name or password' }); }
+  if (!name || !pw || !stored || !checkPassword(pw, stored)) { if (name) await logLogin(stored ? name : '(unknown name)', req, false); return res.status(401).json({ error: 'Wrong name or password' }); }   // never store an unknown name: people type passwords into the Name box
 
   try {
     const { token, expiresAt } = mintSession(name);
