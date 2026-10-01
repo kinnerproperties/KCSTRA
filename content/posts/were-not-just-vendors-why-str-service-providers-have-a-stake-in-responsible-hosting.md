@@ -8,7 +8,7 @@ description: Short-term rental vendors play a critical role in shaping the
   support responsible hosting to protect local communities, ensure long-term
   viability, and keep the industry thriving.
 ---
-# **We’re Not Just Vendors: Why STR Service Providers Have a Stake in Responsible Hosting**
+**We’re Not Just Vendors: Why STR Service Providers Have a Stake in Responsible Hosting**
 
 As the owner of TurnTidy KC, a cleaning company that specializes in vacation rentals, I know that short-term rentals don't operate in a vacuum (pun fully intended).
 
@@ -104,7 +104,6 @@ Because the goal isn't simply to make money from Kansas City's short-term rental
 
 **It's to help build an STR community that Kansas City will still welcome tomorrow.**
 
-  
 
 
 *Stacy Johnson is a local STR industry provider and host, KCSTRA board member, and avid 5-star guest dedicated to elevating advocacy for hosts and the broader short-term rental and Kansas City tourism industry.*
