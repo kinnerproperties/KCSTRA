@@ -1,6 +1,6 @@
 ---
 title: "We’re Not Just Vendors: Why STR Service Providers Have a Stake in
-  Responsible Hosting**"
+  Responsible Hosting"
 date: 2026-09-30
 author: Stacy Johnson
 description: Short-term rental vendors play a critical role in shaping the
@@ -8,8 +8,6 @@ description: Short-term rental vendors play a critical role in shaping the
   support responsible hosting to protect local communities, ensure long-term
   viability, and keep the industry thriving.
 ---
-**We’re Not Just Vendors: Why STR Service Providers Have a Stake in Responsible Hosting**
-
 As the owner of TurnTidy KC, a cleaning company that specializes in vacation rentals, I know that short-term rentals don't operate in a vacuum (pun fully intended).
 
 Behind every successful STR is an entire network of people and businesses: cleaners, property managers, maintenance professionals, photographers, designers, landscapers, real estate agents, bookkeepers, software companies and countless others whose livelihoods benefit from a healthy short-term rental market.
