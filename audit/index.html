@@ -149,6 +149,7 @@ svg.spark { width: 100%; height: 120px; }
       <button data-view="operators">Operators</button>
       <button data-view="owners">Owners</button>
       <button data-view="worldcup">World Cup</button>
+      <button data-view="limited">30+ nights only <span id="lim-badge" class="pill green hidden"></span></button>
       <button data-view="enforce">Enforcement <span id="enf-badge" class="pill grey hidden"></span></button>
       <button data-view="corrections">Corrections <span id="corr-badge" class="pill amber hidden"></span></button>
       <button data-view="method">Method</button>
@@ -200,6 +201,7 @@ svg.spark { width: 100%; height: 120px; }
         <label><input type="checkbox" id="f-wc" onchange="renderTable()"> World Cup</label>
         <label><input type="checkbox" id="f-uf" onchange="renderTable()"> Unit / density flag</label>
         <label><input type="checkbox" id="f-off" onchange="renderTable()"> Offline now</label>
+        <select id="f-stay" onchange="renderTable()" title="From each listing's Airbnb booking calendar, read daily"><option value="">Any stay length</option><option value="short">Taking short stays now</option><option value="limited">Limited to 30+ nights (not a problem)</option><option value="closed">Calendar closed</option><option value="unread">Calendar not read yet</option></select>
         <select id="f-zip" onchange="renderTable()"><option value="">All ZIPs</option></select>
         <select id="f-enf" onchange="renderTable()" title="Neighborhood Services cases and registrations found by searching CompassKC by street address"><option value="">City enforcement: any</option><option value="open">Open city enforcement case</option><option value="court">Court case pending</option><option value="any">Any city case, open or closed</option><option value="rp">Registration in progress</option><option value="acr">Cleared by the address search</option></select>
         <span class="chips" id="f-extra"></span>
@@ -227,6 +229,15 @@ svg.spark { width: 100%; height: 120px; }
     <section class="view" data-view="worldcup">
       <p class="muted" id="wc-intro"></p>
       <div class="tablewrap"><table><thead><tr><th>Listing</th><th>Host</th><th>Number</th><th>City status</th><th>Finding</th><th>Owner of record</th></tr></thead><tbody id="wc-body"></tbody></table></div>
+    </section>
+
+    <section class="view" data-view="limited">
+      <p class="muted">Listings with a permit problem whose Airbnb calendar is limited to stays of 30 nights or more. A 30+ night stay needs no KCMO permit, so these are <b>not counted as problems</b> while they stay that way; their finding is kept. Read every morning from each listing's public booking calendar. If short stays reopen, the listing goes straight back into the problem counts with a red "reopened short stays" flag. After 90 days at 30+ nights it is treated as mid-term and leaves the audit, like a verified mid-term correction, but its calendar is still read. Major Event listings at 30+ nights were set that way by Airbnb (October 2026 takedown); for the others the record does not show whether the host or Airbnb did it. A closed calendar alone proves nothing, so a listing that was never seen at 30+ nights stays a problem.</p>
+      <div class="stats" id="lim-stats"></div>
+      <div class="card"><h2>Reopened short stays in the last 30 days</h2><p class="muted">Were limited to 30+ nights, now take short stays again. Back in the problem counts.</p>
+        <div class="tablewrap" style="max-height:40vh"><table><thead><tr><th>Listing</th><th>Host</th><th>Finding</th><th>Reopened</th><th>Shortest stay</th></tr></thead><tbody id="lim-reopen"></tbody></table></div></div>
+      <div class="filters" data-form-scope="off"><input id="lim-q" placeholder="Search listing, host, number" oninput="renderLimited()"><select id="lim-who" onchange="renderLimited()"><option value="">All limited listings</option><option value="airbnb">Major Event, blocked by Airbnb</option><option value="other">Other problem listings</option><option value="midterm">Past 90 days, out of the audit</option></select><span class="muted" id="lim-count"></span></div>
+      <div class="tablewrap"><table><thead><tr><th>Listing</th><th>Host</th><th>Finding</th><th>Number on listing</th><th>Minimum</th><th>Calendar now</th><th>Limited since</th><th>Days</th></tr></thead><tbody id="lim-body"></tbody></table></div>
     </section>
 
     <section class="view" data-view="enforce">
@@ -392,7 +403,18 @@ let S = null, PROB = [], INDEX = [], byId = {}, filtered = [], page = 0, sortK =
 const extra = {};  // chart-driven filters: gband, nmMin, nmMax, expYear, ptype, host, bldg, age, permitted, okOnly, nonProb
 function setExtra(o) { Object.assign(extra, o); for (const k in extra) if (extra[k] == null || extra[k] === '' || extra[k] === false) delete extra[k]; renderTable(); }
 function renderExtra() { const L = { g8: 'more than 8 guests', gband: 'guests: ' + GUEST_BANDS[extra.gband], permitted: 'properly permitted', okOnly: 'properly permitted', nonProb: 'no permit problem', nmMin: 'nearest permit ≥ ' + extra.nmMin + ' m', nmMax: 'nearest permit < ' + extra.nmMax + ' m', expYear: 'expired in ' + extra.expYear, ptype: 'type: ' + extra.ptype, host: 'host: ' + extra.host, bldg: BLDG_L[extra.bldg], age: 'operating: ' + extra.age }; $('f-extra').innerHTML = Object.keys(extra).map(k => `<span class="chip" onclick="setExtra({${k}:null})" title="remove">${esc(L[k])} ✕</span>`).join(''); }
-const isProb = x => PROB.includes(x.cat);
+/* Booking calendars (api/_audit-board.js, read daily). LIMITED = a problem finding whose last open calendar was 30+ nights
+   only: a 30+ night stay needs no KCMO permit, so it is NOT counted as a problem and has its own view (Adam, Oct 10 2026).
+   Short stays reopening puts it straight back with a red flag; after MIDTERM_DAYS it leaves the audit like a verified
+   mid-term correction (applyVerified). Declared here because isProb reads it. */
+let STAY = {};
+const MIDTERM_DAYS = 90, REOPEN_FLAG_DAYS = 30;
+const daysAgo = iso => iso ? Math.floor((Date.now() - Date.parse(iso)) / 86400000) : 0;
+const stayClass = id => { const r = STATUS[id]; if (r && r.state === 'gone') return 'offline'; const s = STAY[id]; if (!s || !s.state) return 'unread'; if (s.state === 'short') return 'short'; if (s.known === 'monthly' || s.state === 'monthly') return 'limited'; return s.state; };
+const isLimited = x => PROB.includes(x.cat) && stayClass(x.id) === 'limited';
+const limitedDays = id => { const s = STAY[id]; return s ? daysAgo(s.knownSince || s.since) : 0; };
+const reopenedRecently = id => { const s = STAY[id]; return !!(s && s.reopenedAt && s.state === 'short' && daysAgo(s.reopenedAt) <= REOPEN_FLAG_DAYS); };
+const isProb = x => PROB.includes(x.cat) && !isLimited(x);
 // permit-type display: the old CD-STR program reads better as "pre-2023"; a World Cup number CompassKC could not resolve (typo'd prefix) is still a Major Event number
 const PT_LEGACY = 'Pre-2023 registration (CD-STR, all expired)', PT_WC = 'Major Event (World Cup)';
 function normalizeTypes() { for (const x of S.listings) { if (x.pt === 'Legacy program (pre-2023)') x.pt = PT_LEGACY; if (!x.pt && x.wc) x.pt = PT_WC; } const t = {}; for (const x of S.listings) if (x.pt) t[x.pt] = (t[x.pt] || 0) + 1; S.summary.permitType = t; }
@@ -424,7 +446,10 @@ async function loadSnapshot(date) {
 function renderOverview() {
   const s = S.summary, N = s.listings, pct = n => Math.round(100 * n / N) + '%', wcBad = S.listings.filter(x => x.wc && isProb(x)).length;
   $('stats').innerHTML = [
-    ['', N, 'listings checked', ''], ['red', s.problems, `with a permit problem · ${pct(s.problems)}`, 'prob'], ['red', s.strong, 'confirmed unpermitted · no valid permit for the property or within 200 m', 'strong'],
+    ['', N, 'listings checked', ''], ['red', s.problems, `with a permit problem · ${pct(s.problems)}`, 'prob'],
+    ...(Object.keys(STAY).length ? (() => { const P = S.listings.filter(isProb), k = v => P.filter(x => stayClass(x.id) === v).length, L = S.listings.filter(isLimited), mt = (S.all || []).filter(x => x.midterm).length;
+      return [['red', k('short'), `problem listings taking short stays now · ${k('closed')} with a closed calendar · ${k('offline')} off Airbnb${k('unread') ? ` · ${k('unread')} not read yet` : ''}`, 'short'],
+        ['green', L.length, `limited to 30+ nights · not counted as problems · ${L.filter(x => x.wc).length} blocked by Airbnb (Major Event)${mt ? ` · ${mt} past ${MIDTERM_DAYS} days, out of the audit` : ''}`, 'limited']]; })() : []), ['red', s.strong, 'confirmed unpermitted · no valid permit for the property or within 200 m', 'strong'],
     ['amber', s.worldCup, `cite a World Cup permit · ${wcBad} with nothing else active, ${s.worldCup - wcBad} since re-permitted`, 'wc'], ['green', s.permitted, `properly permitted · ${pct(s.permitted)}`, 'ok'], ['', s.hotel, 'hotel rooms (excluded)', 'hotel'], ['', s.hostsWithProblems, `hosts with a problem · of ${s.hosts} hosts (${Math.round(100 * s.hostsWithProblems / s.hosts)}%)`, 'hosts'],
     ...(s.enforcement && s.enforcement.addressChecked ? [['amber', s.enforcement.openCase, `problem listings where the city already has an open enforcement case · ${s.enforcement.courtPending} in court · ${s.enforcement.reclassifiedByAddressSearch} cleared by the address search`, 'enf']] : []),
   ].map(([t, n, l, go]) => `<div class="stat ${t}" style="cursor:pointer" onclick="statGo('${go}')"><div class="n" data-n="${n}">0</div><div class="l">${l}</div></div>`).join('');
@@ -437,12 +462,14 @@ function renderOverview() {
 }
 function statGo(go) {
   resetFilters();
-  if (go === 'prob') $('f-prob').checked = true; else if (go === 'strong') $('f-strong').checked = true; else if (go === 'wc') $('f-wc').checked = true;
+  if (go === 'limited') { showView('limited'); return; }
+  if (go === 'short') { $('f-prob').checked = true; $('f-stay').value = 'short'; }
+  else if (go === 'prob') $('f-prob').checked = true; else if (go === 'strong') $('f-strong').checked = true; else if (go === 'wc') $('f-wc').checked = true;
   else if (go === 'ok') extra.permitted = true; else if (go === 'hotel') $('f-cat').value = 'Hotel room, claims exempt'; else if (go === 'hosts') { $('o-q').value = ''; $('o-min').checked = true; showView('operators'); renderOps(); return; }
   else if (go === 'enf') { $('f-prob').checked = true; $('f-enf').value = 'open'; }
   showView('listings'); renderTable();
 }
-function resetFilters() { $('f-q').value = ''; $('f-cat').value = ''; $('f-pt').value = ''; $('f-zip').value = ''; $('f-enf').value = ''; ['f-prob', 'f-strong', 'f-wc', 'f-uf', 'f-off'].forEach(i => $(i).checked = false); for (const k in extra) delete extra[k]; }
+function resetFilters() { $('f-q').value = ''; $('f-cat').value = ''; $('f-pt').value = ''; $('f-zip').value = ''; $('f-enf').value = ''; ['f-prob', 'f-strong', 'f-wc', 'f-uf', 'f-off'].forEach(i => $(i).checked = false); $('f-stay').value = ''; for (const k in extra) delete extra[k]; }
 function countUp() {
   document.querySelectorAll('#stats .n').forEach(el => { const target = +el.dataset.n; const t0 = performance.now(), dur = 900;
     const step = now => { const p = Math.min(1, (now - t0) / dur), v = Math.round(target * (1 - Math.pow(1 - p, 3))); el.textContent = v.toLocaleString(); if (p < 1) requestAnimationFrame(step); }; requestAnimationFrame(step);
@@ -537,9 +564,9 @@ function fillFilters() {
   $('f-zip').innerHTML = '<option value="">All ZIPs</option>' + Object.entries(zips).sort((a, b) => b[1] - a[1]).map(([z, n]) => `<option value="${z}">${z} (${n})</option>`).join('');
 }
 function applyFilters() {
-  const q = $('f-q').value.trim().toLowerCase(), cat = $('f-cat').value, pt = $('f-pt').value, prob = $('f-prob').checked, strong = $('f-strong').checked, wc = $('f-wc').checked, uf = $('f-uf').checked, zip = $('f-zip').value, off = $('f-off').checked, enf = $('f-enf').value;
+  const q = $('f-q').value.trim().toLowerCase(), cat = $('f-cat').value, pt = $('f-pt').value, prob = $('f-prob').checked, strong = $('f-strong').checked, wc = $('f-wc').checked, uf = $('f-uf').checked, zip = $('f-zip').value, off = $('f-off').checked, stayF = $('f-stay').value, enf = $('f-enf').value;
   renderExtra();
-  filtered = S.listings.filter(x => (!cat || x.cat === cat) && (!pt || x.pt === pt) && (!prob || isProb(x)) && (!strong || x.st) && (!wc || x.wc) && (!uf || x.uf) && (!zip || x.zip === zip) && (!off || (STATUS[x.id] && STATUS[x.id].state === 'gone')) &&
+  filtered = S.listings.filter(x => (!cat || x.cat === cat) && (!pt || x.pt === pt) && (!prob || isProb(x)) && (!strong || x.st) && (!wc || x.wc) && (!uf || x.uf) && (!zip || x.zip === zip) && (!off || (STATUS[x.id] && STATUS[x.id].state === 'gone')) && (!stayF || stayClass(x.id) === stayF) &&
     (!enf || (enf === 'open' ? nsdOpen(x) : enf === 'court' ? nsdCourt(x) : enf === 'any' ? (x.nsd || []).length : enf === 'rp' ? (x.rp || []).length : enf === 'acr' ? !!x.acr : true)) &&
     (!extra.permitted || PERMITTED.has(x.cat)) && (!extra.okOnly || (!isProb(x) && !x.cat.startsWith('Hotel'))) && (!extra.nonProb || !isProb(x)) && (extra.gband == null || (x.g && guestBand(x.g) === extra.gband)) &&
     (!extra.g8 || (x.g || 0) > 8) && (extra.nmMin == null || (x.nm || 0) >= extra.nmMin) && (extra.nmMax == null || (x.nm || 0) < extra.nmMax) && (!extra.expYear || (x.ex || '').startsWith(extra.expYear)) && (!extra.ptype || (x.at || '') === extra.ptype) && (!extra.host || x.hid === extra.host) && (!extra.bldg || bldgBand(x) === extra.bldg) && (!extra.age || ageBand(x) === extra.age) &&
@@ -548,7 +575,7 @@ function applyFilters() {
 }
 const UNITCATS = new Set(['One registration, multiple units', 'Exceeds building density limit']);
 const groupMode = () => $('f-uf').checked || UNITCATS.has($('f-cat').value);
-const rowHtml = (x, cls) => `<tr class="click ${cls || ''}" onclick="openListing('${x.id}')"><td>${pill(x.cat)}${x.st ? ' <span class="pill red">confirmed</span>' : ''}${x.uf && !UNITCATS.has(x.cat) ? ' <span class="pill red" title="'+esc(x.ufd)+'">units</span>' : ''}${stChip(x.id)}${enfChip(x)}</td><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${esc(x.reg || '(none)')}</td><td>${esc(x.cs)}</td><td>${esc(x.pt)}</td><td>${esc(x.ca)}</td><td>${esc(x.own)}</td><td>${x.nm ?? ''}</td><td title="first review ${esc(frOf(x))}">${frOf(x) ? esc(frOf(x).slice(0,7)) + ' · ' + esc(ageLabel(x)) : (rcOf(x) === 0 ? '<span class="muted">no reviews</span>' : '')}</td><td>${x.g ?? ''}</td></tr>`;
+const rowHtml = (x, cls) => `<tr class="click ${cls || ''}" onclick="openListing('${x.id}')"><td>${pill(x.cat)}${x.st ? ' <span class="pill red">confirmed</span>' : ''}${x.uf && !UNITCATS.has(x.cat) ? ' <span class="pill red" title="'+esc(x.ufd)+'">units</span>' : ''}${stChip(x.id)}${stayChip(x.id)}${enfChip(x)}</td><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${esc(x.reg || '(none)')}</td><td>${esc(x.cs)}</td><td>${esc(x.pt)}</td><td>${esc(x.ca)}</td><td>${esc(x.own)}</td><td>${x.nm ?? ''}</td><td title="first review ${esc(frOf(x))}">${frOf(x) ? esc(frOf(x).slice(0,7)) + ' · ' + esc(ageLabel(x)) : (rcOf(x) === 0 ? '<span class="muted">no reviews</span>' : '')}</td><td>${x.g ?? ''}</td></tr>`;
 function renderTable(keepPage) {
   applyFilters(); if (!keepPage) page = 0;
   if (groupMode()) {
@@ -571,7 +598,7 @@ function renderTable(keepPage) {
   $('tbody').innerHTML = filtered.slice(page * PER, page * PER + PER).map(x => rowHtml(x)).join('');
 }
 document.querySelectorAll('#tbl th').forEach(th => th.onclick = () => { const k = th.dataset.k; if (sortK === k) sortD = -sortD; else { sortK = k; sortD = 1; } renderTable(); });
-const HEAD=[['Finding','cat',x=>LABEL[x.cat]||x.cat],['Confirmed unpermitted','st',x=>x.st?'YES':''],['Listing','t'],['Airbnb link','url',x=>'https://www.airbnb.com/rooms/'+x.id],['Listing ID','id'],['Host','h'],['Host ID','hid'],['Host profile link','hostUrl',x=>'https://www.airbnb.com/users/profile/'+x.hid],
+const HEAD=[['Finding','cat',x=>LABEL[x.cat]||x.cat],['Confirmed unpermitted','st',x=>x.st?'YES':''],['Stay length today','stay',x=>({short:'short stays',limited:'limited to 30+ nights (not a problem)',closed:'calendar closed',offline:'offline',unread:'not read'})[stayClass(x.id)]],['Listing','t'],['Airbnb link','url',x=>'https://www.airbnb.com/rooms/'+x.id],['Listing ID','id'],['Host','h'],['Host ID','hid'],['Host profile link','hostUrl',x=>'https://www.airbnb.com/users/profile/'+x.hid],
   ['Number on listing','reg'],['CompassKC link','cx',x=>{const f=firstPermit(x.reg);return f?COMPASS(f):'';}],['City status','cs'],['City permit type','pt'],['World Cup','wc',x=>x.wc?'YES':''],['City expires','ex'],['Renewal on file','rn'],['City address','ca'],['City parcel','cp'],['Parcel Viewer link','pv',x=>x.cp?PARCEL(x.cp):''],
   ['Active permit on parcel','pa'],['Permit parcel distance (m)','pd'],['Nearest active permit (m)','nm'],['Unit / density flag','uf'],['Flag detail','ufd'],['Owner of record','own'],['Owner mailing address','mail'],['City enforcement cases','nsd',x=>(x.nsd||[]).map(c=>c.n+' '+c.s).join('; ')],['Registration in progress','rp',x=>(x.rp||[]).map(c=>c.n+' '+c.s).join('; ')],['Cleared by address search','acr',x=>x.acr||''],['Guests','g'],['Lat','lat'],['Lng','lng'],['Note','note']];
 const rowVals=x=>HEAD.map(([,k,f])=>f?f(x):(x[k]??''));
@@ -616,6 +643,8 @@ function applyVerified() {
   for (const c of corrections) { if (c.status !== 'verified') continue; const x = byId[c.id]; if (!x) continue; x.corr = c.kind;
     if (c.kind === 'fixed') x.cat = 'Active permit'; else if (c.kind === 'hotel') x.cat = 'Hotel room, claims exempt';
     else if (c.kind === 'midterm' || c.kind === 'wrong') { x.dropped = true; x.st = false; } }   // the pipeline drops these rows; they are not "permitted"
+  // limited to 30+ nights for MIDTERM_DAYS: mid-term, out of the audit like a verified midterm correction (still read daily — a reopen brings it back)
+  for (const x of S.all) { delete x.midterm; if (!x.dropped && isLimited(x) && limitedDays(x.id) >= MIDTERM_DAYS) { x.dropped = true; x.midterm = true; } }
   S.listings = S.all.filter(x => !x.dropped);
   const cnt = {}; for (const x of S.listings) cnt[x.cat] = (cnt[x.cat] || 0) + 1; S.summary.byCat = cnt;
   S.summary.listings = S.listings.length; S.summary.worldCup = S.listings.filter(x => x.wc).length;
@@ -634,12 +663,29 @@ const pill2 = s => `<span class="pill ${s === 'open' ? 'amber' : s === 'verified
 async function delCorr(ts) { await api('', { method: 'POST', body: JSON.stringify({ action: 'correction-delete', ts }) }); loadCorrections(); }
 async function setCorr(ts, status) { await api('', { method: 'POST', body: JSON.stringify({ action: 'correction-status', ts, status }) }); loadCorrections(); }
 
+/* ---------- limited to 30+ nights (stay readings, see stayClass) ---------- */
+function renderLimited() {
+  if (!S || !$('lim-body')) return;
+  const all = (S.all || S.listings).filter(x => PROB.includes(x.cat) && stayClass(x.id) === 'limited' && !(x.corr === 'midterm' || x.corr === 'wrong'));
+  const air = x => !!x.wc, mt = x => limitedDays(x.id) >= MIDTERM_DAYS;
+  const reo = S.listings.filter(x => PROB.includes(x.cat) && reopenedRecently(x.id));
+  $('lim-stats').innerHTML = [['green', all.filter(x => !mt(x)).length, 'limited to 30+ nights now · not counted as problems', ''], ['', all.filter(x => air(x) && !mt(x)).length, 'Major Event listings blocked by Airbnb', 'airbnb'], ['', all.filter(x => !air(x) && !mt(x)).length, 'other problem listings at 30+ nights', 'other'], ['', all.filter(mt).length, `past ${MIDTERM_DAYS} days · treated as mid-term, out of the audit`, 'midterm'], ['red', reo.length, 'reopened short stays in the last 30 days · back in the problem counts', '']]
+    .map(([t, n, l, f]) => `<div class="stat ${t}"${f ? ` style="cursor:pointer" onclick="$('lim-who').value='${f}';renderLimited()"` : ''}><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+  $('lim-reopen').innerHTML = reo.map(x => { const s = STAY[x.id]; return `<tr class="click" onclick="openListing('${x.id}')"><td>${esc(x.t)}</td><td>${esc(x.h)}</td><td>${pill(x.cat)}</td><td>${fmtD(s.reopenedAt)}</td><td>${s.shortest ?? s.minOpen ?? ''} nights</td></tr>`; }).join('') || '<tr><td colspan="5" class="muted">None so far.</td></tr>';
+  const q = $('lim-q').value.trim().toLowerCase(), who = $('lim-who').value;
+  const list = all.filter(x => (!who || (who === 'airbnb' ? air(x) && !mt(x) : who === 'other' ? !air(x) && !mt(x) : mt(x))) && (!q || [x.t, x.h, x.reg, x.id].some(v => String(v || '').toLowerCase().includes(q))))
+    .sort((a, b) => limitedDays(b.id) - limitedDays(a.id) || (a.h || '').localeCompare(b.h || ''));
+  $('lim-count').textContent = `${list.length} of ${all.length}`;
+  $('lim-body').innerHTML = list.map(x => { const s = STAY[x.id] || {}, d = limitedDays(x.id); return `<tr class="click" onclick="openListing('${x.id}')"><td>${esc(x.t)}${air(x) ? ' <span class="pill amber">blocked by Airbnb</span>' : ''}${mt(x) ? ' <span class="pill grey">mid-term, out of the audit</span>' : ''}</td><td>${esc(x.h)}</td><td>${pill(x.cat)}</td><td>${esc(x.reg || '(none)')}</td><td>${s.minOpen ?? ''}+ nights</td><td>${s.state === 'closed' ? 'closed' : 'open'}</td><td>${fmtD(s.knownSince || s.since)}</td><td>${d}</td></tr>`; }).join('') || '<tr><td colspan="8" class="muted">None.</td></tr>';
+  const b = $('lim-badge'); if (b) { const n = all.filter(x => !mt(x)).length; b.textContent = n; b.classList.toggle('hidden', !n); }
+}
+
 /* ---------- listing status + enforcement log ---------- */
 let STATUS = {}, EVENTS = [], STSUM = {};
 const EK = { letter: ['City letter', 'amber'], takedown: ['Taken down', 'red'], citation: ['Citation', 'red'], complaint: ['Complaint', 'amber'], permit_denied: ['Permit denied', 'red'], permit_revoked: ['Permit revoked', 'red'], permit_issued: ['Permit issued', 'green'], court: ['Court', 'red'], note: ['Note', 'grey'], other: ['Other', 'grey'],
   went_offline: ['Went offline', 'grey'], came_back: ['Came back', 'amber'], permit_lapsed: ['Permit lapsed', 'amber'], permit_new: ['New permit', 'green'], finding_changed: ['Finding changed', 'blue'], listing_dropped: ['Left the audit', 'grey'], listing_new: ['New listing', 'blue'],
   reg_changed: ['Number changed', 'amber'], title_changed: ['Renamed', 'blue'], relist_suspect: ['Possible relist', 'red'],
-  search_hidden: ['Out of short-stay search', 'red'], search_listed: ['Back in search', 'amber'], stay_monthly: ['Now 30+ nights only', 'green'], stay_short: ['Short stays reopened', 'red'] };
+  search_hidden: ['Out of short-stay search', 'red'], search_listed: ['Back in search', 'amber'], stay_monthly: ['Limited to 30+ nights', 'green'], stay_short: ['Short stays reopened', 'red'] };
 const CITY_K = new Set(['letter', 'takedown', 'citation', 'complaint', 'permit_denied', 'permit_revoked', 'permit_issued', 'court', 'note', 'other']);
 const ekPill = k => { const [l, c] = EK[k] || [k, 'grey']; return `<span class="pill ${c}">${esc(l)}</span>`; };
 const stOf = id => STATUS[id] || null;
@@ -652,7 +698,17 @@ const ageBand = x => { const m = ageMonths(x); return m == null ? (rcOf(x) === 0
 const AGE_BANDS = ['< 6 months', '6–12 months', '1–2 years', '2–3 years', '3–5 years', '5+ years', 'no reviews', 'unknown'];
 const stChip = id => { const r = stOf(id); if (!r) return ''; if (r.state === 'gone') return ` <span class="pill grey" title="Not opening on Airbnb since ${esc(r.since || '')}">offline</span>`; if (r.suspect) return ` <span class="pill red" title="${r.cycles} offline→online cycles; came back ${esc(r.lastBack || '')}">reopened</span>`; return ''; };
 const fmtD = s => s ? String(s).slice(0, 10) : '';
+const stayChip = id => { const s = STAY[id], k = stayClass(id), x = byId[id];
+  if (reopenedRecently(id)) return ` <span class="pill red" title="Was limited to 30+ nights; short stays open again since ${esc(fmtD(s.reopenedAt))}">reopened short stays</span>`;
+  if (k === 'limited') return ` <span class="pill green" title="Every open date on the Airbnb calendar needs ${s.minOpen}+ nights since ${esc(fmtD(s.knownSince || s.since))} — no KCMO permit needed, so not counted as a problem">limited to 30+ nights${x && x.wc ? ' · Airbnb' : ''}</span>`;
+  if (k === 'closed') return ` <span class="pill grey" title="No open check-in date in the next ~3 months (read ${esc(fmtD(s.at))}) — booked solid or switched off">calendar closed</span>`; return ''; };
+const stayLine = id => { const s = STAY[id], k = stayClass(id); if (k === 'offline') return ''; if (k === 'unread') return '<span class="muted">Booking calendar not read yet.</span>';
+  if (k === 'short') { const n = s.shortest ?? s.minOpen; return `${reopenedRecently(id) ? `<span class="pill red">reopened short stays</span> on ${fmtD(s.reopenedAt)} after being limited to 30+ nights · ` : ''}Takes short stays — shortest ${n} night${n === 1 ? '' : 's'} (calendar read ${fmtD(s.at)})`; }
+  if (k === 'limited') { const d = limitedDays(id); return `<span class="pill green">limited to 30+ nights</span> since ${fmtD(s.knownSince || s.since)} (${d} day${d === 1 ? '' : 's'}${s.state === 'closed' ? ', calendar closed now' : ''}) — no KCMO permit needed, so not counted as a problem. ${d >= MIDTERM_DAYS ? `Past ${MIDTERM_DAYS} days: treated as mid-term and out of the audit.` : `Leaves the audit after ${MIDTERM_DAYS} days; back in the problem counts if short stays reopen.`}`; }
+  return `<span class="pill grey">calendar closed</span> no open check-in date (read ${fmtD(s.at)})`; };
 async function loadStatus() { try { const d = await api('?status=1'); STATUS = d.status || {}; delete STATUS._meta; STSUM = d.summary || {}; } catch { STATUS = {}; } try { EVENTS = (await api('?events=1')).events || []; } catch { EVENTS = []; }
+  try { STAY = (await api('?stay=1')).stay || {}; delete STAY._meta; } catch { STAY = {}; }
+  if (S) { applyVerified(); setMeta(); renderOverview(); renderOps(); renderOwners(); renderLimited(); if (mapReady) mapData(); }
   const off = STSUM.gone || 0; const b = $('enf-badge'); if (b) { b.textContent = off; b.classList.toggle('hidden', !off); } if (S) renderTable(true); if (curView === 'enforce') renderEnforce(); }
 function enfListingLink(e) { const x = e.id && byId[e.id]; return e.id ? `<a href="#" onclick="openListing('${esc(e.id)}');return false">${esc(e.title || (x && x.t) || e.id)}</a>${x ? ' ' + pill(x.cat) : ''}` : '<span class="muted">-</span>'; }
 function renderEnforce() {
@@ -683,7 +739,7 @@ function exportEvents() { const H = ['date', 'kind', 'listing', 'listing id', 'p
 function drawerStatusHtml(id) {
   const r = stOf(id); const ev = EVENTS.filter(e => e.id === id).slice(0, 12);
   const line = !r ? '' : r.state === 'gone' ? `<span class="pill grey">offline</span> not opening on Airbnb since ${fmtD(r.since)}${r.afterEnforcement ? ' · after a logged ' + esc(r.afterEnforcement.replace('_', ' ')) : ''}` : r.state === 'live' ? `<span class="pill green">live</span> on Airbnb as of ${fmtD(r.checkedAt)}${r.cycles ? ` · came back ${r.cycles} time${r.cycles === 1 ? '' : 's'}${r.suspect ? ' <span class="pill red">hide-and-reopen</span>' : ''}` : ''}` : '<span class="pill grey">not probed yet</span>';
-  return `<div class="card"><h2>Status &amp; enforcement</h2><p>${line}</p>${ev.length ? '<ul class="muted">' + ev.map(e => `<li>${esc(e.date || fmtD(e.ts))} · ${ekPill(e.kind)} ${esc(e.note || '')}</li>`).join('') + '</ul>' : ''}<p><button class="btn small" onclick="prefillEvent('${id}','letter')">Log city letter</button> <button class="btn small" onclick="prefillEvent('${id}','takedown')">Log takedown</button> <button class="btn small" onclick="prefillEvent('${id}','complaint')">Log complaint</button></p></div>`;
+  return `<div class="card"><h2>Status &amp; enforcement</h2><p>${line}</p>${stayLine(id) ? `<p>${stayLine(id)}</p>` : ''}${ev.length ? '<ul class="muted">' + ev.map(e => `<li>${esc(e.date || fmtD(e.ts))} · ${ekPill(e.kind)} ${esc(e.note || '')}</li>`).join('') + '</ul>' : ''}<p><button class="btn small" onclick="prefillEvent('${id}','letter')">Log city letter</button> <button class="btn small" onclick="prefillEvent('${id}','takedown')">Log takedown</button> <button class="btn small" onclick="prefillEvent('${id}','complaint')">Log complaint</button></p></div>`;
 }
 
 /* ---------- operators + owners ---------- */
@@ -759,6 +815,7 @@ function showView(v) {
   if (v === 'map') { initMap(); setTimeout(() => map && map.resize(), 50); }
   if (v === 'activity') renderActivity();
   if (v === 'enforce') renderEnforce();
+  if (v === 'limited') renderLimited();
   if (v !== curView || !hbTimer) ping(v); curView = v;
   try { localStorage.setItem('str-audit-view', v); } catch {}
 }

@@ -14,6 +14,7 @@
  *   GET  /api/audit?activity=1        → { logins, sessions } (admins only, AUDIT_ADMINS)
  *   GET  /api/audit?status=1          → listing liveness map (str-audit:status, written by kinnerproperties.com's daily probe)
  *   GET  /api/audit?events=1          → enforcement log + auto events (str-audit:events, shared with the admin dashboard)
+ *   GET  /api/audit?stay=1            → booking-calendar readings (str-audit:stay, written by kinnerproperties.com's daily stay check)
  *   POST /api/audit {action:'event', kind, id?, reg?, address?, date, note, source?, link?} / {action:'event-delete', ts}
  *
  * Corrections live in Redis under audit:corrections (array, newest first) and
@@ -44,7 +45,8 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
 
   if (req.method === 'GET') {
-    const { snapshot, corrections, activity, status, events } = req.query || {};
+    const { snapshot, corrections, activity, status, events, stay } = req.query || {};
+    if (stay) return res.json({ stay: (await kvGet('str-audit:stay')) || {} });
     if (status) { const st = (await kvGet(STATUS_KEY)) || {}; return res.json({ status: st, summary: statusSummary(st) }); }
     if (events) return res.json({ events: (await kvGet(EVENTS_KEY)) || [] });
     if (activity) { if (!isAdmin(user)) return res.status(403).json({ error: 'Admins only' }); return res.json({ logins: (await kvGet(LOG_KEY)) || [], sessions: (await kvGet(SESS_KEY)) || [] }); }
