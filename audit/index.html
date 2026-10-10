@@ -115,6 +115,15 @@ svg.spark { width: 100%; height: 120px; }
 .chip:hover { background: var(--red-bg); }
 #drawer { overflow-wrap: anywhere; }
 @media (max-width: 600px) { #drawer dl { grid-template-columns: 110px 1fr; } }
+.wk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.wk-chart h3{font-size:12px;font-weight:600;margin:0 0 6px}
+.wk-n{font-size:11px;color:var(--gray);font-weight:400}
+.wk-bars{display:flex;align-items:flex-end;gap:4px;height:80px;border-bottom:1px solid var(--border)}
+.wk-bars button{flex:1;min-width:6px;border:0;border-radius:3px 3px 0 0;background:var(--navy);cursor:pointer;padding:0}
+.wk-bars button.wk-zero{background:transparent;cursor:default}
+.wk-bars button.wk-dim{opacity:.3}
+.wk-bars button.wk-on{outline:2px solid var(--ink);outline-offset:1px}
+.wk-axis{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);margin-top:3px}
 </style>
 </head>
 <body>
@@ -243,6 +252,7 @@ svg.spark { width: 100%; height: 120px; }
     <section class="view" data-view="enforce">
       <p class="muted">Two things on one timeline: what listings do (a daily probe opens every listing we have ever seen on Airbnb; a listing that stops opening is <b>offline</b>, and one that comes back within 45 days or flips twice is a <b>hide-and-reopen</b> suspect) and what the city does (letters, takedowns, citations, denials, permits lapsing from the registry between snapshots). Log city actions here or from a listing's drawer.</p>
       <div class="stats" id="enf-stats"></div>
+      <div class="card" id="wk-card"><h2>What changed each week</h2><p class="muted">Changes the daily checks recorded on audit listings, by week (Monday start). Each chart has its own scale. Click a bar to list those listings in the timeline below; click it again to clear.</p><div class="wk-grid" id="wk-grid"></div></div>
       <div class="card" data-form-scope="off"><h2>Log a city action</h2>
         <div class="filters">
           <select id="e-kind"><option value="letter">City letter / notice sent</option><option value="takedown">Listing taken down</option><option value="citation">Citation / fine</option><option value="complaint">Complaint filed (311 / RE)</option><option value="permit_denied">Permit denied</option><option value="permit_revoked">Permit revoked</option><option value="permit_issued">Permit issued</option><option value="court">Court / hearing</option><option value="note">Note</option><option value="other">Other</option></select>
@@ -259,7 +269,7 @@ svg.spark { width: 100%; height: 120px; }
       <div class="filters" data-form-scope="off">
         <select id="ef-kind" onchange="renderEnforce()"><option value="">All events</option><option value="city">City actions only</option><option value="offline">Offline / came back</option><option value="suspect">Hide-and-reopen suspects</option><option value="permit">Registry: permits lapsed / new</option><option value="finding">Finding changed between snapshots</option></select>
         <input id="ef-q" placeholder="Search listing, permit, address, note" oninput="renderEnforce()" style="min-width:240px">
-        <span class="muted" id="ef-count"></span>
+        <button class="btn small hidden" id="ef-pick" type="button" onclick="pickWeek(WK_PICK.change, WK_PICK.week)"></button> <span class="muted" id="ef-count"></span>
         <button class="btn small" onclick="exportEvents()">Export CSV</button>
         
       </div>
@@ -715,16 +725,41 @@ async function loadStatus() { try { const d = await api('?status=1'); STATUS = d
   try { STAY = (await api('?stay=1')).stay || {}; delete STAY._meta; } catch { STAY = {}; }
   if (S) { applyVerified(); setMeta(); renderOverview(); renderOps(); renderOwners(); renderLimited(); if (mapReady) mapData(); }
   const off = STSUM.gone || 0; const b = $('enf-badge'); if (b) { b.textContent = off; b.classList.toggle('hidden', !off); } if (S) renderTable(true); if (curView === 'enforce') renderEnforce(); }
-function enfListingLink(e) { const x = e.id && byId[e.id]; return e.id ? `<a href="#" onclick="openListing('${esc(e.id)}');return false">${esc(e.title || (x && x.t) || e.id)}</a>${x ? ' ' + pill(x.cat) : ''}` : '<span class="muted">-</span>'; }
+/* ---------- weekly changes (Enforcement tab): a small bar chart per kind of change, built from EVENTS; a click filters the timeline ---------- */
+const WK_KINDS = { went_offline: 'went_offline', came_back: 'came_back', stay_monthly: 'stay_monthly', stay_short: 'stay_short', reg_changed: 'reg_changed', permit_lapsed: 'permit_lapsed', permit_new: 'permit_new', letter: 'city', takedown: 'city', citation: 'city', complaint: 'city', permit_denied: 'city', permit_revoked: 'city', court: 'city' };
+const WK_LABEL = { went_offline: 'Went offline on Airbnb', came_back: 'Came back online', stay_monthly: 'Limited to 30+ nights', stay_short: 'Reopened short stays', reg_changed: 'Changed the number shown', permit_lapsed: 'Permits that left the registry', permit_new: 'New permits in the registry', city: 'City actions logged' };
+let WK_PICK = null;
+const wkOf = d => { const t = new Date(String(d).slice(0, 10) + 'T12:00:00Z'); t.setUTCDate(t.getUTCDate() - (t.getUTCDay() + 6) % 7); return t.toISOString().slice(0, 10); };
+const wkDay = w => new Date(w + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+const evDay = e => e.date || fmtD(e.ts);
+const wkMatch = e => !WK_PICK || (WK_KINDS[e.kind] === WK_PICK.change && !!evDay(e) && wkOf(evDay(e)) === WK_PICK.week);
+function renderWeekly() {
+  const box = $('wk-grid'); if (!box) return;
+  const cnt = {}, weeks = new Set();
+  for (const e of EVENTS) { const c = WK_KINDS[e.kind], d = evDay(e); if (!c || !d) continue; const w = wkOf(d); weeks.add(w); cnt[c + '|' + w] = (cnt[c + '|' + w] || 0) + 1; }
+  const W = [...weeks].sort();
+  if (!W.length) { box.innerHTML = '<p class="muted">Nothing recorded yet.</p>'; return; }
+  box.innerHTML = Object.keys(WK_LABEL).map(c => { const max = Math.max(1, ...W.map(w => cnt[c + '|' + w] || 0)), tot = W.reduce((a, w) => a + (cnt[c + '|' + w] || 0), 0);
+    return `<div class="wk-chart"><h3>${esc(WK_LABEL[c])} <span class="wk-n">· ${tot}</span></h3><div class="wk-bars">${W.map(w => { const n = cnt[c + '|' + w] || 0, on = !!WK_PICK && WK_PICK.change === c && WK_PICK.week === w;
+      return `<button type="button" class="${n ? '' : 'wk-zero'}${WK_PICK && !on ? ' wk-dim' : ''}${on ? ' wk-on' : ''}" style="height:${n ? Math.max(4, Math.round(76 * n / max)) : 0}px" title="${esc(WK_LABEL[c])} · week of ${wkDay(w)}: ${n}${n ? ' (click to list them)' : ''}" ${n ? `onclick="pickWeek('${c}','${w}')"` : 'disabled'}></button>`; }).join('')}</div><div class="wk-axis"><span>${wkDay(W[0])}</span><span>${W.length > 1 ? wkDay(W[W.length - 1]) : ''}</span></div></div>`; }).join('');
+}
+function pickWeek(change, week) {
+  WK_PICK = WK_PICK && WK_PICK.change === change && WK_PICK.week === week ? null : { change, week };
+  renderEnforce(); if (WK_PICK) $('enf-body').closest('.tablewrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function enfListingLink(e) { const x = e.id && byId[e.id]; return e.id ? `<a href="#" onclick="openListing('${esc(e.id)}');return false">${esc(e.title || (x && x.t) || e.id)}</a>${x ? ' ' + pill(x.cat) : ''} <a href="https://www.airbnb.com/rooms/${esc(String(e.id).replace(/\D/g, ''))}" target="_blank" rel="noopener" title="Open the listing on Airbnb">Airbnb ↗</a>` : '<span class="muted">-</span>'; }
 function renderEnforce() {
   const meta = STSUM || {}; const lettered = EVENTS.filter(e => e.kind === 'letter').length, down = EVENTS.filter(e => e.kind === 'takedown').length, lapsed = EVENTS.filter(e => e.kind === 'permit_lapsed').length;
   const stat = (n, t, go) => `<div class="stat click" style="cursor:pointer" onclick="${go}"><div class="n">${n}</div><div class="l">${t}</div></div>`;
   $('enf-stats').innerHTML = stat(meta.gone || 0, 'listings offline right now', "document.getElementById('off-body').scrollIntoView({behavior:'smooth'})") + stat(meta.suspects || 0, 'hide-and-reopen suspects', "$('ef-kind').value='suspect';renderEnforce()") + stat(lettered, 'city letters logged', "$('ef-kind').value='city';renderEnforce()") + stat(down, 'takedowns logged', "$('ef-kind').value='city';renderEnforce()") + stat(lapsed, 'permits lapsed between snapshots', "$('ef-kind').value='permit';renderEnforce()")
     + `<div class="stat"><div class="n" style="font-size:18px;font-family:inherit;font-weight:600">${meta.lastRun ? esc(new Date(meta.lastRun).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })) : 'never'}</div><div class="l">last probe · ${meta.checked || 0} checked, ${meta.errors || 0} errors · ${meta.listings || 0} tracked</div></div>`;
   const k = $('ef-kind').value, q = $('ef-q').value.trim().toLowerCase();
-  const rows = EVENTS.filter(e => (k === '' || (k === 'city' && CITY_K.has(e.kind)) || (k === 'offline' && (e.kind === 'went_offline' || e.kind === 'came_back')) || (k === 'suspect' && e.suspect) || (k === 'permit' && (e.kind === 'permit_lapsed' || e.kind === 'permit_new')) || (k === 'finding' && e.kind === 'finding_changed'))
+  const rows = EVENTS.filter(e => wkMatch(e) && (k === '' || (k === 'city' && CITY_K.has(e.kind)) || (k === 'offline' && (e.kind === 'went_offline' || e.kind === 'came_back')) || (k === 'suspect' && e.suspect) || (k === 'permit' && (e.kind === 'permit_lapsed' || e.kind === 'permit_new')) || (k === 'finding' && e.kind === 'finding_changed'))
     && (!q || [e.title, e.id, e.reg, e.address, e.note, e.source, e.by].some(v => String(v || '').toLowerCase().includes(q))));
   $('ef-count').textContent = `${rows.length} of ${EVENTS.length}`;
+  const pk = $('ef-pick'); if (pk) { pk.classList.toggle('hidden', !WK_PICK); pk.textContent = WK_PICK ? `${WK_LABEL[WK_PICK.change]} · week of ${wkDay(WK_PICK.week)} ×` : ''; }
+  renderWeekly();
   $('enf-body').innerHTML = rows.slice(0, 600).map(e => `<tr${e.suspect ? ' style="background:var(--red-bg)"' : ''}><td>${esc(e.date || fmtD(e.ts))}</td><td>${ekPill(e.kind)}</td><td>${enfListingLink(e)}</td><td>${esc(e.reg || '')}${e.reg && e.address ? ' · ' : ''}${esc(e.address || '')}</td><td>${esc(e.note || '')}${safeUrl(e.link) ? ` <a href="${esc(safeUrl(e.link))}" target="_blank" rel="noopener">link</a>` : ''}${e.source ? ` <span class="muted">· ${esc(e.source)}</span>` : ''}</td><td class="muted">${e.auto ? 'auto' : esc(e.by || '')}</td><td>${e.auto ? '' : `<button class="btn small" onclick="if(confirm('Delete this entry?'))delEvent('${e.ts}')">Delete</button>`}</td></tr>`).join('') || '<tr><td colspan="7" class="muted">Nothing logged yet. The first probe runs tonight; log city letters and takedowns above as they happen.</td></tr>';
   const off = Object.entries(STATUS).filter(([, r]) => r.state === 'gone').sort((a, b) => (b[1].since || '').localeCompare(a[1].since || ''));
   $('off-body').innerHTML = off.map(([id, r]) => `<tr class="click" onclick="openListing('${id}')"><td>${esc(r.t || id)}</td><td>${esc(r.h || '')}</td><td>${byId[id] ? pill(byId[id].cat) : esc(r.cat || '')}</td><td>${fmtD(r.since)}</td><td>${r.cycles || 0}</td><td>${r.afterEnforcement ? ekPill(r.afterEnforcement) : ''}</td></tr>`).join('') || '<tr><td colspan="6" class="muted">None known offline.</td></tr>';
