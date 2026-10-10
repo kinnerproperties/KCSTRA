@@ -51,6 +51,8 @@ export default async function handler(req, res) {
     if (events) return res.json({ events: (await kvGet(EVENTS_KEY)) || [] });
     if (activity) { if (!isAdmin(user)) return res.status(403).json({ error: 'Admins only' }); return res.json({ logins: (await kvGet(LOG_KEY)) || [], sessions: (await kvGet(SESS_KEY)) || [] }); }
     if (corrections) return res.json({ corrections: (await kvGet(KEY)) || [] });
+    // the admin dashboard's verified corrections (str-audit:corrections) — counted here too, as the pipeline does
+    if (req.query.sharedCorrections) return res.json({ corrections: ((await kvGet('str-audit:corrections')) || []).filter(c => c.status === 'verified').map(c => ({ id: c.id, kind: c.kind, status: c.status })) });   // ids + kinds only, no notes
     if (snapshot) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(String(snapshot))) return res.status(400).json({ error: 'bad snapshot id' });
       const f = join(DIR, 'snapshots', `${snapshot}.json`);

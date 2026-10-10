@@ -636,11 +636,16 @@ async function logCorrection(id) {
   const x = byId[id]; const r = await api('', { method: 'POST', body: JSON.stringify({ action: 'correction', id, kind: $('c-kind').value, note: $('c-note').value, title: x.t, cat: x.cat }) });
   if (r.ok) { await loadCorrections(); openListing(id); } else alert(r.error || 'Could not log the correction.');
 }
+/* Verified corrections from BOTH stores — this page's and the other dashboard's (admin str-audit:corrections, KCSTRA
+   audit:corrections; same Redis). The pipeline's pull_corrections.py already merges both, so the two pages and the board
+   dashboard count the same listings (Oct 10 2026: 366 vs 367 before this). First store wins when both have the listing. */
+let SHARED_CORR = [];
+const allVerified = () => { const seen = new Set(), out = []; for (const c of corrections.concat(SHARED_CORR)) { if (c.status !== 'verified' || seen.has(String(c.id))) continue; seen.add(String(c.id)); out.push(c); } return out; };
 function applyVerified() {
   if (!S) return;
   S.all = S.all || S.listings;   // every listing in the snapshot; S.listings = the ones still in the audit
   for (const x of S.all) { delete x.corr; delete x.dropped; x.cat = x.cat0; x.st = x.st0; }
-  for (const c of corrections) { if (c.status !== 'verified') continue; const x = byId[c.id]; if (!x) continue; x.corr = c.kind;
+  for (const c of allVerified()) { const x = byId[c.id]; if (!x) continue; x.corr = c.kind;
     if (c.kind === 'fixed') x.cat = 'Active permit'; else if (c.kind === 'hotel') x.cat = 'Hotel room, claims exempt';
     else if (c.kind === 'midterm' || c.kind === 'wrong') { x.dropped = true; x.st = false; } }   // the pipeline drops these rows; they are not "permitted"
   // limited to 30+ nights for MIDTERM_DAYS: mid-term, out of the audit like a verified midterm correction (still read daily — a reopen brings it back)
@@ -654,7 +659,7 @@ function applyVerified() {
   S.summary.hotel = cnt['Hotel room, claims exempt'] || 0;
 }
 async function loadCorrections() {
-  corrections = (await api('?corrections=1')).corrections || []; const open = corrections.filter(c => c.status === 'open').length;
+  corrections = (await api('?corrections=1')).corrections || []; try { SHARED_CORR = (await api('?sharedCorrections=1')).corrections || []; } catch { SHARED_CORR = []; } const open = corrections.filter(c => c.status === 'open').length;
   if (S) { applyVerified(); setMeta(); renderOverview(); renderTable(true); renderOps(); renderOwners(); renderWC(); if (mapReady) mapData(); }
   $('corr-badge').textContent = open; $('corr-badge').classList.toggle('hidden', !open);
   $('corr-body').innerHTML = corrections.map(c => `<tr><td>${esc(c.ts.slice(0, 16).replace('T', ' '))}</td><td><a href="#" onclick="openListing('${c.id}');return false">${esc(c.title || c.id)}</a></td><td>${esc(LABEL[c.cat] || c.cat)}</td><td>${esc(c.kind)}</td><td>${esc(c.note)}${c.by ? ` <span class="muted">· ${esc(c.by)}</span>` : ''}</td><td>${pill2(c.status)}${c.resolvedBy ? ` <span class="muted">by ${esc(c.resolvedBy)}</span>` : ''}</td><td>${c.status === 'open' ? `<button class="btn small" onclick="setCorr('${c.ts}','verified')">Verified</button> <button class="btn small" onclick="setCorr('${c.ts}','rejected')">Reject</button>` : ''} <button class="btn small" onclick="if(confirm('Delete this entry?'))delCorr('${c.ts}')">Delete</button></td></tr>`).join('') || '<tr><td colspan="7" class="muted">Nothing logged yet.</td></tr>';
