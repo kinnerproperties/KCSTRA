@@ -1,6 +1,6 @@
 ---
-title: Taxed Like a Marriott, Built Like a Bungalow How the Nov. 3 election
-  could decide your next property tax bill
+title: "Taxed Like a Marriott, Built Like a Bungalow: How the Nov. 3 election
+  could decide your next property tax bill"
 date: 2026-10-13
 author: Stacy Johnson
 description: Your short-term rental isn’t a hotel, so why is government treating
@@ -126,13 +126,13 @@ Candidates are never more accessible than when they're asking for your vote. Fun
 ## **What you can do this week**
 
 1. **Show up Thursday.** The KCSTRA meetup is Thursday, Oct. 15 at 6:00 PM at 117 W Armour Blvd, with a Kansas City regulations update and Q&A. Bring a friend who hosts.
-2. **Know your number.** Run your property through the [++MOVHA property tax calculator++](https://movha.org/tax-calculator/) to see what commercial reclassification would do to your bill. One real number beats a ten-minute speech.
-3. **Find your people.** Look up your State Representative and State Senator with the [++Missouri legislator lookup++](https://www.senate.mo.gov/legislookup/default), and know your County Legislator too. You can't make your case to someone if you don't know who they are.
+2. **Know your number.** Run your property through the ++[MOVHA property tax calculator](https://movha.org/tax-calculator/)++ to see what commercial reclassification would do to your bill. One real number beats a ten-minute speech.
+3. **Find your people.** Look up your State Representative and State Senator with the ++[Missouri legislator lookup](https://www.senate.mo.gov/legislookup/default)++, and know your County Legislator too. You can't make your case to someone if you don't know who they are.
 4. **Follow them online.** It's 2026. Your candidates are on Facebook, Instagram and X, and that's where they post their events, town halls and fundraisers. Follow, comment respectfully, and share your hosting story where they'll see it. A thoughtful comment from a local constituent gets noticed more than you'd think.
 5. **Vote.** No-excuse early voting runs Oct. 20 through Nov. 2. Mail-in absentee requests are due Oct. 21. Election Day is Nov. 3. Hosts who don't vote are just guests with opinions.
-6. **Tell your story.** MOVHA is collecting owner stories: how many people you hire, how many guests you've hosted, and how much sales and lodging tax you've remitted. [++Share yours here++](https://movha.org/bills/).
+6. **Tell your story.** MOVHA is collecting owner stories: how many people you hire, how many guests you've hosted, and how much sales and lodging tax you've remitted. ++[Share yours here](https://movha.org/bills/)++.
 
-**Bonus round, Wednesday night:** Eastern Jackson County chambers of commerce are hosting a forum for Jackson County Legislature candidates, the same body that passed the tax pause. [++Register through the Lee's Summit Chamber++](https://leessummitchamberofcommerce.growthzoneapp.com/calendar) and confirm the start time.
+**Bonus round, Wednesday night:** Eastern Jackson County chambers of commerce are hosting a forum for Jackson County Legislature candidates, the same body that passed the tax pause. ++[Register through the Lee's Summit Chamber](https://leessummitchamberofcommerce.growthzoneapp.com/calendar)++ and confirm the start time.
 
 ## **The bottom line**
 
@@ -165,7 +165,6 @@ So go meet them while they still need your vote.
 - ++[KCUR: Lake vs. Rohlfing](https://www.kcur.org/politics-elections-and-government/2026-10-07/jackson-county-executive-election-rohlfing-lake)++
 - ++[KCTV: Missouri voter guide](https://www.kctv5.com/2026/09/28/draft-missouri-voter-guide-what-you-need-know-november-elections/)++
 - ++[The Ballot Brief: Missouri House District 16](https://theballotbrief.com/state/missouri/clay-county/missouri-house-district-16)++
-
 - ++[Wikipedia: Chris Brown (Missouri politician)](https://en.wikipedia.org/wiki/Chris_Brown_(Missouri_politician))++
 - ++[Missouri Independent: Patterson vs. Ingle in the 8th District](https://missouriindependent.com/2026/10/09/missouri-senate-battleground-pits-jon-patterson-against-keri-ingle-in-jackson-county/)++
 - ++[News Tribune: Patterson vs. Ingle](https://www.newstribune.com/news/2026/oct/10/missouri-senate-battleground-pits-patterson/)++
@@ -178,4 +177,3 @@ So go meet them while they still need your vote.
 - ++[The Pitch: Lake and Rohlfing forum](https://www.thepitchkc.com/jackson-county-executive-candidates-debate-policy-path-back-to-public-trust-ahead-of-nov-election/)++
 - ++[Wikipedia: 2018 Jackson County Executive election](https://en.wikipedia.org/wiki/2018_Jackson_County_Executive_election)++
 
-  
