@@ -115,7 +115,7 @@ const posts = fs.existsSync(POSTS_DIR)
         const { data, content } = matter(fs.readFileSync(path.join(POSTS_DIR, f), 'utf8'));
         const slug = f.replace(/\.md$/, '');
         if (!data.title || !data.date) throw new Error(`Post ${f} is missing a title or date in its frontmatter`);
-        return { slug, title: data.title, date: (data.date instanceof Date ? data.date.toISOString() : String(data.date)).slice(0, 10), author: data.author || 'KCSTRA', description: data.description || '', html: marked.parse(content) };
+        return { slug, title: data.title, date: (data.date instanceof Date ? data.date.toISOString() : String(data.date)).slice(0, 10), author: data.author || 'KCSTRA', description: data.description || '', minutes: Math.max(1, Math.round(content.split(/\s+/).filter(Boolean).length / 200)), html: marked.parse(content) };
       })
       .filter((p) => {
         if (p.date > TODAY) { console.log(`Scheduled (not yet published): ${p.slug} — goes live ${p.date}`); return false; }
@@ -160,7 +160,7 @@ fs.writeFileSync(path.join(OUT_DIR, 'index.html'), page({ title: 'Blog', descrip
 // Feed for the homepage "Latest from the Blog" section
 fs.writeFileSync(
   path.join(OUT_DIR, 'posts.json'),
-  JSON.stringify(posts.slice(0, 3).map(({ slug, title, date, author, description }) => ({ slug, title, date: formatDate(date), author, description })))
+  JSON.stringify(posts.slice(0, 3).map(({ slug, title, date, author, description, minutes }) => ({ slug, title, date: formatDate(date), author, description, minutes })))
 );
 
 console.log(`Built ${posts.length} post(s) into blog/`);
