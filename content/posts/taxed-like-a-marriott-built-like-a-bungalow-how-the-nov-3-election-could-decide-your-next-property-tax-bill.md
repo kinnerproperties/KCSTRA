@@ -33,7 +33,7 @@ County Legislator Sean Smith introduced Ordinance 5987, which passed on June 18,
 
 Rep. Chris Brown's bill to keep single-family rentals classified as residential passed the House 118-34 in 2025. It never got a Senate vote.
 
-In 2026, the Senate passed its version 30-3, and the House passed one too. Then the House folded it into a bigger property tax package, adding a 15-home cap on corporate owners. When session ended May 15 without a property tax deal, the fix went down with the ship. Who testified against it? The hotel and lodging lobby. Shocking, we know.
+In 2026, the Senate passed its version 30-3, and the House passed one too. Then the House folded it into a bigger property tax package, adding a 15-home cap on corporate owners. When session ended May 15 without a property tax deal, the fix went down with the ship. Who testified against it early on? The hotel and lodging lobby. Shocking, we know. They later agreed to the 15 cap and their official position is neutral - that should stick into next session.
 
 The bottom line: Missouri law hasn't changed. Nothing stops an assessor from trying this again.
 
@@ -63,7 +63,7 @@ Last we checked, hotels don't come with a backyard, a mailbox and a neighbor nam
 
 ### **Myth: Most short-term rentals operate illegally anyway**
 
-**Fact:** A city audit found about 93% of units operated without a permit between 2018 and 2022. That was a real problem, and the industry said so. Licensed hosts publicly welcomed holding unlicensed operators accountable.
+**Fact:** A city audit found about 93% of units operated without a permit between 2018 and 2022. That was a real problem, and the industry said so. Licensed hosts publicly welcomed holding unlicensed operators accountable. In Kansas City, regulators have done a good job making sure everyone is registered legally compared to pre-2023.
 
 The answer is enforcement and registration. Punishing licensed hosts for unlicensed ones is like ticketing every car in the lot because one guy parked on the sidewalk.
 
@@ -99,13 +99,13 @@ If our sponsor loses, the bill needs a new champion in January.
 
 Patterson currently runs the Missouri House. Now he's running for an open Senate seat in one of the few competitive Senate races in the state. A Republican-sponsored poll from early October had Ingle ahead 48% to 45%.
 
-Patterson's campaign leads with property tax relief, which is exactly the conversation we want to be in.
+Ingle voted for our bill last session.  Patterson is a real estate investor himself, and his campaign leads with property tax relief, which is exactly the conversation we want to be in.
 
 ### **Missouri House District 34 (Lee's Summit): Sean Smith (R) vs. Rep. Kemp Strickler (D)**
 
-Rep. Kemp Strickler is the incumbent, first elected in 2022 by 37 votes. In his first term, he was the ranking member on the House tax reform committee and sat on the property tax reform committee. Sean Smith is a Jackson County Legislator who introduced the 2025 ordinance pausing reclassification. Both have worked on property taxes, and this is a close district.
+Rep. Kemp Strickler is the incumbent, first elected in 2022 by 37 votes. In his first term, he was the ranking member on the House tax reform committee and sat on the property tax reform committee. Sean Smith is a Jackson County Legislator who introduced the 2025 ordinance pausing reclassification. Both have worked on property taxes, and this is a close district. Strickler voted in favor of our bill last session.
 
-Whoever wins will vote on our bill, so meet both. Smith's county work dealt with our issue directly, which saves a lot of explaining.
+Whoever wins will vote on our bill, so meet both. Smith's county work dealt with our issue directly and we are very grateful for his support - plus it saves a lot of explaining.
 
 ### **Jackson County Executive: Stacy Lake (D) vs. Alan Rohlfing (R)**
 
