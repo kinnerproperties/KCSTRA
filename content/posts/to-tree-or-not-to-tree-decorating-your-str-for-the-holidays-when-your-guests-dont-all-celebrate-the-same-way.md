@@ -7,17 +7,15 @@ description: "Decorating your short term rental can be done in a way that is
   warm, inviting, seasonal, and neutral without making assumptions about how
   guests celebrate the holidays.  "
 ---
-# Is it even a question?  (Yes. Or, at least, it should be.)
 
-It's mid-November. Somewhere in a garage, a host is staring down a seven-foot artificial tree, still in a box held together by packing tape and optimism. The tree stares back. Neither one blinks. "Do I really want to do this?" One may ask themself.
 
-The question shows up right on schedule every year, somewhere between the last pumpkin spice latte and the first holiday song in the grocery store: does the tree go up at the rental this year, or does it stay in the box?
+Is it even a question?  Yes.  Or at least it should be.  It's mid-November. Somewhere in a garage, a host is staring down a seven-foot artificial tree, still in the box held together by packing tape (and optimism).  "Do I really want to do this?" One may ask themself.
 
-No rulebook here, and this post isn't going to write one. Think of it as a few things to chew on over your eggnog. No judgement here.
+The question shows up right on schedule every year: does the tree go up at the rental this year, or does it stay in the box?  No rulebook here, and this post isn't going to write one. Think of it as a few things to chew on over your eggnog. 
 
 ## **Meet your December guests**
 
-Picture your booking calendar for the month. There's the family of nine who drove six hours for the full storybook Christmas and would be quietly heartbroken without a tree. There's the traveling nurse on a 13-week contract who wants blackout curtains, strong Wi-Fi, and absolutely no jingle bells at 7 a.m. after their night shift.
+Picture your booking calendar for the month. There's the family of nine who drove six hours for the full storybook Christmas and would be quietly heartbroken without a tree. There's the traveling nurse on a 13-week contract who wants blackout curtains, strong Wi-Fi, and absolutely no jingle bells.
 
 There's the couple lighting Hanukkah candles in your kitchen. There's the solo traveler who booked specifically to escape the family group chat. And there's the group from overseas who are honestly just curious what all the fuss is about.
 
@@ -27,7 +25,7 @@ Sometimes they're all on your calendar in the same month. Sometimes the same wee
 
 To one guest, a twinkling tree in the corner says, "Welcome. We thought of you." To another, the same tree says, "You're a visitor on someone else's holiday." Same tree. Same lights. Completely different message. Both of them are real, and neither guest is wrong.
 
-Then there's the practical side. The pine needles that turn up in the vacuum well into March. The toddler-versus-glass-ornament matchup - and the ornament never wins. And that one strand of lights that works only when it feels like it.
+Then there's the practical side. The pine needles that turn up in our vacuums well into March. The toddler-versus-glass-ornament matchup - and the ornament never wins. And that one strand of lights that works only when it feels like it.
 
 ## **Questions worth sitting with**
 
