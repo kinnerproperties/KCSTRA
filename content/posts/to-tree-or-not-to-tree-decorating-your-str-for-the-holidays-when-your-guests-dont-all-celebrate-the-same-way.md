@@ -59,4 +59,7 @@ One gentle thought on safety, because guests don't know your outlets, your break
 
 So, over to you. Tree, no tree, or tree in a box by the closet door? Tell us in the comments. And if anyone has figured out how to get that tree back into that box and back into the basement in one piece, please share.
 
-  
+
+
+*Stacy is the owner of TurnTidy KC, the newest KCSTRA board member, and a forever 5-star guest - turned 5-star host. She’s an advocate for the hosts and vendors who keep Kansas City’s short-term rentals running. Her blog aims to cover the systems, strategies, and community involvement it takes to keep this industry thriving.* 
+
